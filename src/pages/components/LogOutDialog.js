@@ -51,6 +51,7 @@ export default function LogOutDialog({ Open, onClose }) {
       .then((user) => {
         isClose();
         window.location.reload();
+        localStorage.clear();
       })
       .catch((error) => {
         console.log(error);

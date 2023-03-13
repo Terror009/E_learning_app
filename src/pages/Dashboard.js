@@ -16,12 +16,12 @@ import {
 
 import { Link as NLink } from "react-router-dom";
 import NavBar from "./components/NavBar";
-
+import BottomNav from "./components/BottomNav";
 import "../utils/firebase";
 import { getAuth } from "firebase/auth";
+
 export default function Dashboard() {
   const auth = getAuth();
-  console.log(auth.currentUser)
   const [payload, SetPayload] = useState({
     email: "",
     username: "",
@@ -55,24 +55,56 @@ export default function Dashboard() {
         sx={{
           backgroundColor: "linen",
           position: "relative",
-          padding: "20px 20px",
+          padding: {
+            lg: "20px 20px",
+            md: "20px 20px",
+            sm: "20px 20px",
+            xs: "20px 10px",
+          },
         }}
       >
-        <Box sx={{ display: "flex", justifyContent: "space-around" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: {
+              lg: "row",
+              md: "row",
+              sm: "row",
+              xs: "column",
+            },
+            justifyContent: "space-around",
+          }}
+        >
           <Paper
             sx={{
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
               height: "200px",
-              width: "60%",
+              width: {
+                lg: "60%",
+                md: "60%",
+                sm: "60%",
+                xs: "100%",
+              },
+              mb: {
+                lg: "0px",
+                md: "0px",
+                sm: "0px",
+                xs: "20px",
+              },
             }}
           >
             <Box
               sx={{
                 display: "flex",
                 padding: "5px",
-                width: "400px",
+                width: {
+                  lg: "400px",
+                  md: "400px",
+                  ms: "90%",
+                  xs: "90%",
+                },
                 backgroundColor: (theme) => theme.palette.secondary.bg3,
                 borderStyle: "solid",
                 borderWidth: "2px",
@@ -148,7 +180,12 @@ export default function Dashboard() {
               justifyContent: "center",
               alignItems: "center",
               height: "200px",
-              width: "35%",
+              width: {
+                lg: "35%",
+                md: "35%",
+                sm: "35%",
+                xs: "100%",
+              },
             }}
           >
             <Box
@@ -233,7 +270,17 @@ export default function Dashboard() {
             </Box>
           </Paper>
         </Box>
-        <Box sx={{ backgroundColor: "", padding: "20px" }}>
+        <Box
+          sx={{
+            backgroundColor: "",
+            padding: {
+              lg: "10px",
+              md: "10px",
+              sm: "10px",
+              xs: "0px",
+            },
+          }}
+        >
           <Typography
             variant="h5"
             sx={{
@@ -241,6 +288,12 @@ export default function Dashboard() {
               fontWeight: "600",
               color: (theme) => theme.palette.textColor.col7,
               marginBottom: "20px",
+              marginTop: {
+                lg: "0px",
+                md: "0px",
+                sm: "0px",
+                xs: "20px",
+              },
             }}
           >
             Recent Activity
@@ -263,6 +316,7 @@ export default function Dashboard() {
                   fontFamily: (theme) => theme.palette.typography.fontFamily,
                   fontWeight: "normal",
                   marginBottom: "20px",
+                  textAlign: "center",
                 }}
               >
                 It looks like you don't have recent activity
@@ -294,6 +348,7 @@ export default function Dashboard() {
           )}
         </Box>
       </Box>
+      <BottomNav />
       <Box sx={{ padding: "20px", height: "20px" }}>
         <Typography
           variant="caption"

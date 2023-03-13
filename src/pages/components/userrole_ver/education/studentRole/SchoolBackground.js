@@ -47,26 +47,7 @@ export default function SchoolBackground() {
   };
 
   const CreateSchoolBackground = () => {
-    if (schoolType === "") {
-      if (schoolType === "K12/High School") {
-        console.log("empty_1");
-      } else {
-        console.log("empty_2");
-      }
-    } else {
-      const db = getFirestore();
-      const usersDoc = doc(db, "Users", auth.currentUser.uid);
-      setDoc(
-        usersDoc,
-        {
-          SchoolType: schoolType,
-          SchoolLevel:
-            schoolType === "K12/High School" ? highSchool : university,
-          Steps: "2",
-        },
-        { merge: true }
-      );
-    }
+    
   };
   return (
     <Box>

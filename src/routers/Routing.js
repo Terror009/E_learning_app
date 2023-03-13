@@ -13,10 +13,9 @@ import UserLogin from "../pages/UserLogin";
 import UserRegister from "../pages/UserRegister";
 import PageNotFound from "../pages/PageNotFound";
 import Dashboard from "../pages/Dashboard";
-import LoginUseEmail from "../pages/components/LoginUseEmail";
-import RegisterUseEmail from "../pages/components/RegisterUseEmail";
 import Activity from "../pages/Activity";
 import Classes from "../pages/Classes";
+import Setting from "../pages/Setting";
 import Loading from "../pages/Loading";
 
 import UserRoleVer from "../pages/UserRoleVer";
@@ -24,100 +23,61 @@ import StudentRoles from "../pages/components/userrole_ver/education/StudentRole
 import TeacherRoles from "../pages/components/userrole_ver/education/TeacherRoles";
 
 import "../utils/firebase";
-import { getAuth } from "firebase/auth";
+import { getAuth, sendEmailVerification, updateProfile } from "firebase/auth";
 import {
   getFirestore,
   getDoc,
+  getDocs,
   collection,
   doc,
   setDoc,
   onSnapshot,
   query,
+  where,
 } from "firebase/firestore";
 
-import { Redirected, Status, UserType } from "../utils/userUrl";
+import { Redirected } from "../utils/userUrl";
 export default function Routing() {
   const Theme = createTheme(theme(true));
   const auth = getAuth();
+  const db = getFirestore();
 
+  const redirected = localStorage;
+  const [userData, SetUserData] = useState({
+    role: "",
+    status: null,
+    redirected: "",
+  });
   const [payload, setPayload] = useState("");
   const [data, Setdata] = useState({
     isAuth: false,
     isLoading: true,
   });
-  const redirected = localStorage;
-  const status = localStorage;
-  const usertype = localStorage;
   useEffect(() => {
     const SetData = () => {
       auth.onAuthStateChanged(async (user) => {
         if (user) {
-          setPayload(user);
-          Setdata({
-            ...data,
-            isAuth: true,
-            isLoading: false,
-          });
-          const db = getFirestore();
-          const userRef = doc(db, "Users", user.uid);
-          const userDoc = await getDoc(userRef);
-          if (!userDoc.exists) {
-            console.log("false");
-          } else {
-            if (userDoc.data().Status) {
-              Redirected("url", "/dashboard");
-              Status("status", true);
+          if (user.emailVerified) {
+            setPayload(user);
 
-              redirected.getItem("url");
-              status.getItem("status");
-            } else if (userDoc.data().userRole === "Student") {
-              Redirected("url", "/userrole_ver/student");
-              UserType("type", userDoc.data().userRole);
-              Status("status", false);
-              status.getItem("status");
-              redirected.getItem("url");
-              usertype.getItem("type");
-            } else if (userDoc.data().userRole === "Teacher") {
-              Redirected("url", "/userrole_ver/teacher");
-              UserType("type", userDoc.data().userRole);
-              Status("status", false);
-              status.getItem("status");
-              redirected.getItem("url");
-              usertype.getItem("type");
-            } else {
-              Redirected("url", "/userrole_ver");
-              UserType("type", userDoc.data().userRole);
-              Status("status", false);
-
-              status.getItem("status");
-              redirected.getItem("url");
-              usertype.getItem("type");
-            }
-          }
-
-          /*    try {
-            const indexof = user.email.indexOf("@");
-            const db = getFirestore();
-            const userRef = collection(db, "Users");
-            const q = query(userRef);
-            
-            onSnapshot(q, (querySnapShot) => {
-              querySnapShot.forEach((doc) => {
-                if (!doc.exists) {
-                  const usersDoc = doc(db, "users", user.uid);
-                  setDoc(usersDoc, {
-                    email: user.email,
-                    username: user.displayName.substring(0, indexof),
-                    userUId: user.uid,
-                  });
-                } else {
-                  console.log("okay");
-                }
-              });
+            Setdata({
+              ...data,
+              isAuth: true,
+              isLoading: false,
             });
-          } catch (err) {
-            console.log(err);
-          } */
+          } else {
+            setPayload();
+
+            const indexof = user.email.indexOf("@");
+            Setdata({
+              ...data,
+              isAuth: false,
+              isLoading: true,
+            });
+            updateProfile(user, {
+              displayName: user.email.substring(0, indexof),
+            });
+          }
         } else {
           console.log("null");
           Setdata({ ...data, isAuth: false, isLoading: false });
@@ -126,6 +86,7 @@ export default function Routing() {
     };
     SetData();
   }, []);
+
   if (!data.isAuth && data.isLoading) {
     return (
       <ThemeProvider theme={Theme}>
@@ -139,107 +100,52 @@ export default function Routing() {
           <Routes>
             <Route
               path="/"
-              element={
-                <PublicRouter
-                  Component={Main}
-                  isAuth={payload}
-                  redirected={redirected.url}
-                />
-              }
+              element={<PublicRouter Component={Main} isAuth={payload} />}
             />
             <Route
               path="/login"
-              element={
-                <PublicRouter
-                  Component={UserLogin}
-                  isAuth={payload}
-                  redirected={redirected.url}
-                />
-              }
+              element={<PublicRouter Component={UserLogin} isAuth={payload} />}
             />
             <Route
               path="/register"
               element={
-                <PublicRouter
-                  Component={UserRegister}
-                  isAuth={payload}
-                  redirected={redirected.url}
-                />
+                <PublicRouter Component={UserRegister} isAuth={payload} />
               }
             />
             <Route
-              path="/login/login_use_email"
+              path="/dashboard"
+              element={<PrivateRouter Component={Dashboard} isAuth={payload} />}
+            />
+            <Route
+              path="/activity"
+              element={<PrivateRouter Component={Activity} isAuth={payload} />}
+            />
+            <Route
+              path="/classes"
+              element={<PrivateRouter Component={Classes} isAuth={payload} />}
+            />
+            <Route
+              path="/setting"
+              element={<PrivateRouter Component={Setting} isAuth={payload} />}
+            />
+            <Route
+              path="/userrole_ver/student"
               element={
-                <PublicRouter
-                  Component={LoginUseEmail}
-                  isAuth={payload}
-                  redirected={redirected.url}
-                />
+                <PrivateRouter Component={StudentRoles} isAuth={payload} />
               }
             />
             <Route
-              path="/register/register_use_email"
+              path="/userrole_ver/teacher"
               element={
-                <PublicRouter
-                  Component={RegisterUseEmail}
-                  isAuth={payload}
-                  redirected={redirected.url}
-                />
+                <PrivateRouter Component={TeacherRoles} isAuth={payload} />
               }
             />
-            {status.status === true ? (
-              <React.Fragment>
-                <Route
-                  path="/dashboard"
-                  element={
-                    <PrivateRouter Component={Dashboard} isAuth={payload} />
-                  }
-                />
-                <Route
-                  path="/activity"
-                  element={
-                    <PrivateRouter Component={Activity} isAuth={payload} />
-                  }
-                />
-                <Route
-                  path="/classes"
-                  element={
-                    <PrivateRouter Component={Classes} isAuth={payload} />
-                  }
-                />
-              </React.Fragment>
-            ) : (
-              <React.Fragment>
-                {usertype.type === "Student" ? (
-                  <Route
-                    path="/userrole_ver/student"
-                    element={
-                      <PrivateRouter
-                        Component={StudentRoles}
-                        isAuth={payload}
-                      />
-                    }
-                  />
-                ) : usertype.type === "Teacher" ? (
-                  <Route
-                    path="/userrole_ver/teacher"
-                    element={
-                      <PrivateRouter
-                        Component={TeacherRoles}
-                        isAuth={payload}
-                      />
-                    }
-                  />
-                ) : (
-                  <Route
-                    path="/userrole_ver"
-                    element={
-                      <PrivateRouter Component={UserRoleVer} isAuth={payload} />
-                    }
-                  />
-                )}
-              </React.Fragment>
-            )}
+            <Route
+              path="/userrole_ver"
+              element={
+                <PrivateRouter Component={UserRoleVer} isAuth={payload} />
+              }
+            />
 
             <Route path="*" element={<PageNotFound />} />
           </Routes>

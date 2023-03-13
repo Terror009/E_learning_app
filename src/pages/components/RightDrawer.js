@@ -9,8 +9,10 @@ import {
   MenuItem,
   Menu,
   Button,
+  Link,
 } from "@mui/material";
 
+import { Link as NLink } from "react-router-dom";
 import { ReactComponent as ArrowLeftIcon } from "../../assets/svg/arrow_left.svg";
 import { ReactComponent as ArrowRightIcon } from "../../assets/svg/arrow_right.svg";
 import { ReactComponent as SettingIcon } from "../../assets/svg/setting.svg";
@@ -91,26 +93,29 @@ export default function RightDrawer({ Open, onClose }) {
           {payload.email}
         </Typography>
         <MenuList>
-          <MenuItem>
-            <SettingIcon
-              style={{
-                height: "20px",
-                width: "20px",
-                color: "#8A92A6",
-                marginRight: "10px",
-              }}
-            />
-            <Typography
-              variant="body2"
-              sx={{
-                fontFamily: (theme) => theme.palette.typography.fontFamily,
-                fontWeight: "bold",
-                color: (theme) => theme.palette.textColor.col4,
-              }}
-            >
-              Settings
-            </Typography>
-          </MenuItem>
+          <Link component={NLink}  to="/setting" sx={{ textDecoration: "none" }}>
+            <MenuItem>
+              <SettingIcon
+                style={{
+                  height: "20px",
+                  width: "20px",
+                  color: "#8A92A6",
+                  marginRight: "10px",
+                  padding: "10px 0px"
+                }}
+              />
+              <Typography
+                variant="body2"
+                sx={{
+                  fontFamily: (theme) => theme.palette.typography.fontFamily,
+                  fontWeight: "bold",
+                  color: (theme) => theme.palette.textColor.col4,
+                }}
+              >
+                Settings
+              </Typography>
+            </MenuItem>
+          </Link>
           <MenuItem>
             <Button onClick={SignOut}>
               <LogoutIcon

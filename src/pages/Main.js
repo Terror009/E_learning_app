@@ -11,17 +11,15 @@ import {
   Link,
 } from "@mui/material";
 
-import { Link as NLink, useLocation } from "react-router-dom";
-export default function Main() {
-  const location = useLocation();
+import { Link as NLink } from "react-router-dom";
 
-  const switchPage = (pages) => {
-    console.log(pages);
-  };
+import { ReactComponent as ArrowRightIcon } from "../assets/svg/arrow_right.svg";
+
+export default function Main() {
   return (
     <Box>
       <AppBar sx={{ height: "61px", boxShadow: "none" }} position="relative">
-        <Toolbar sx={{ padding: "0px 10px" }}>
+        <Toolbar sx={{ display: "flex", padding: "0px 20px" }}>
           <Typography
             sx={{
               fontFamily: (theme) => theme.palette.typography.fontFamily,
@@ -29,7 +27,7 @@ export default function Main() {
             }}
             variant="h5"
           >
-            Quiz Bee
+            E Learner
           </Typography>
           <Box component="span" sx={{ flexGrow: "1" }} />
           <Button
@@ -39,14 +37,24 @@ export default function Main() {
               borderStyle: "solid",
               borderWidth: "2px",
               borderColor: "darkblue",
-              borderRadius: "5px",
+              borderRadius: "10px",
+              boxShadow: "0px 5px 0px #26399C",
+              transition: "0.4s ease",
+              "&:hover": {
+                boxShadow: "0px 0px 0px #26399C",
+                transform: "translatey(10%)",
+              },
             }}
+            endIcon={
+              <ArrowRightIcon style={{ height: "15px", width: "15px", color: "#26399C"}} />
+            }
           >
             <Typography
               sx={{
                 color: "#fff",
                 fontFamily: (theme) => theme.palette.typography.fontFamily,
-                fontSize: "17px",
+                fontSize: "15px",
+                fontWeight: "bold",
                 textTransform: "capitalize",
                 color: "darkblue",
               }}
@@ -97,29 +105,32 @@ export default function Main() {
           <Link component={NLink} sx={{ textDecoration: "none" }} to="/login">
             <Button
               sx={{
-                height: "40px",
-                width: "100px",
+                height: "60px",
+                width: "150px",
                 borderRadius: "10px",
                 boxShadow: "0px 5px 0px #26399C",
-                transition: "0.5s ease",
+                transition: "0.4s ease",
                 backgroundColor: (theme) => theme.palette.secondary.main,
                 "&:hover": {
                   backgroundColor: (theme) => theme.palette.secondary.bg8,
                   boxShadow: "0px 0px 0px #26399C",
                   transform: "translatey(10%)",
                 },
+                mr: "30px",
               }}
+              endIcon={
+                <ArrowRightIcon style={{ height: "20px", width: "20px" }} />
+              }
             >
               <Typography
                 sx={{
                   color: "darkblue",
                   fontFamily: (theme) => theme.palette.typography.fontFamily,
                   fontWeight: "normal",
-                  fontSize: "17px",
+                  fontSize: "20px",
                   textTransform: "capitalize",
                   color: (theme) => theme.palette.textColor.col2,
                 }}
-                variant="caption"
               >
                 Login
               </Typography>
@@ -132,27 +143,31 @@ export default function Main() {
           >
             <Button
               sx={{
-                height: "40px",
-                width: "100px",
+                height: "60px",
+                width: "150px",
                 backgroundColor: (theme) => theme.palette.secondary.bg4,
                 boxShadow: "0px 5px 0px #72bcd4",
                 borderRadius: "10px",
-                transition: "0.5s ease",
+                transition: "0.4s ease",
                 "&:hover": {
                   backgroundColor: (theme) => theme.palette.secondary.bg10,
                   boxShadow: "0px 0px 0px #72bcd4",
                   transform: "translatey(10%)",
                 },
               }}
+              endIcon={
+                <ArrowRightIcon
+                  style={{ height: "20px", width: "20px", color: "#717171" }}
+                />
+              }
             >
               <Typography
                 sx={{
                   color: (theme) => theme.palette.textColor.col3,
                   fontFamily: (theme) => theme.palette.typography.fontFamily,
-                  fontSize: "17px",
+                  fontSize: "20px",
                   textTransform: "capitalize",
                 }}
-                variant="body1"
               >
                 Register
               </Typography>

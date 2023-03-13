@@ -1,50 +1,99 @@
-import React from "react";
-
-import { Box, Paper, Typography, TextField, Button, Link } from "@mui/material";
-import { Link as NLink } from "react-router-dom";
-import { ReactComponent as FbIcon } from "../assets/svg/facebook.svg";
-import { ReactComponent as GoogleIcon } from "../assets/svg/google.svg";
-import { ReactComponent as EmailIcon } from "../assets/svg/email.svg";
-import { ReactComponent as ArrowRightIcon } from "../assets/svg/arrow_right.svg";
-
-import "../utils/firebase";
+import React, { useState } from "react";
 
 import {
-  getAuth,
-  GoogleAuthProvider,
-  FacebookAuthProvider,
-  signInWithRedirect,
-} from "firebase/auth";
+  Box,
+  Paper,
+  Typography,
+  TextField,
+  Button,
+  Link,
+  InputAdornment,
+  IconButton,
+} from "@mui/material";
+import { Link as NLink } from "react-router-dom";
+import MessageDialog from "./components/MessageDialog";
 
+import { ReactComponent as ShowIcon } from "../assets/svg/show.svg";
+import { ReactComponent as HideIcon } from "../assets/svg/hide.svg";
+import { ReactComponent as EmailIcon } from "../assets/svg/email-solid.svg";
+
+import "../utils/firebase";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 export default function UserLogin() {
   const auth = getAuth();
-  const googleProvider = new GoogleAuthProvider();
-  const facebookProvider = new FacebookAuthProvider();
-  const signInGoogle = async () => {
-    await signInWithRedirect(
-      auth,
-      googleProvider.setCustomParameters({ prompt: "select_account" })
-    )
-      .then((user) => {
-        console.log(user);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+
+  const [dialog, SetDialog] = useState({
+    message: "",
+    isOpen: false,
+  });
+
+  const [payload, SetPayload] = useState({
+    email: "",
+    password: "",
+    showpassword: false,
+  });
+  const handleChangeDialogClose = () => {
+    SetDialog({ ...dialog, isOpen: false });
+  };
+  const handleChangePasswordShow = () => {
+    SetPayload({ ...payload, showpassword: true });
+  };
+  const handleChangePasswordHide = () => {
+    SetPayload({ ...payload, showpassword: false });
   };
 
-  const signInFacebook = async () => {
-    await signInWithRedirect(
-      auth,
-      facebookProvider.setCustomParameters({ prompt: "select_account" })
-    )
-      .then((user) => {
-        console.log(user);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const handleChange = (prop) => (e) => {
+    SetPayload({ ...payload, [prop]: e.target.value });
   };
+
+  const LoginAccount = async () => {
+    if (payload.email === "" || payload.password === "") {
+      SetDialog({
+        ...dialog,
+        message: "Please enter value in fields",
+        isOpen: true,
+      });
+    } else if (payload.password.length < 8 || payload.password.length > 12) {
+      SetDialog({
+        ...dialog,
+        message: "Please enter 8 - 12 character password",
+        isOpen: true,
+      });
+    } else {
+      await signInWithEmailAndPassword(auth, payload.email, payload.password)
+        .then((user) => {
+          console.log(user);
+        })
+        .catch((err) => {
+          console.log(err);
+          const message = err.message;
+
+          if (message.includes("auth/invalid-email")) {
+            SetDialog({
+              ...dialog,
+              message: "Invalid email!",
+              isOpen: true,
+            });
+          } else if (message.includes("auth/wrong-password")) {
+            SetDialog({
+              ...dialog,
+              message: "Wrong username/password!",
+              isOpen: true,
+            });
+          } else if (message.includes("auth/user-not-found")) {
+            SetDialog({
+              ...dialog,
+              message: "Wrong username/password!",
+              isOpen: true,
+            });
+          }
+        });
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -53,7 +102,7 @@ export default function UserLogin() {
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
-        backgroundColor: (theme) => theme.palette.primary.bg2,
+        backgroundColor: (theme) => theme.palette.primary.bg4,
       }}
     >
       <Typography
@@ -62,136 +111,225 @@ export default function UserLogin() {
           fontFamily: (theme) => theme.palette.typography.fontFamily,
           fontWeight: "bold",
           marginBottom: "40px",
+          color: (theme) => theme.palette.textColor.col2,
         }}
       >
         Quiz Bee
       </Typography>
-      <Paper sx={{ padding: "24px", width: "350px" }}>
-        <Typography
-          variant="h6"
-          sx={{
-            fontFamily: (theme) => theme.palette.typography.fontFamily,
-            fontWeight: "bold",
-            marginBottom: "20px",
-          }}
-        >
-          Login in to Quiz Bee
-        </Typography>
-        <Button
+      <Paper
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "20px 20px",
+          width: {
+            lg: "500px",
+            md: "400px",
+            sm: "80%",
+            xs: "80%",
+          },
+        }}
+      >
+        <Box component="label" htmlFor="email" placeholder="Email Address" />
+        <TextField
           fullWidth
+          id="email"
+          placeholder="Email Address"
           sx={{
-            borderStyle: "solid",
-            borderWidth: "1px",
-            borderColor: (theme) => theme.palette.secondary.bg2,
-            transition: "0.2s ease",
-            padding: "10px 15px",
-
-            "&:hover": {
-              boxShadow: "0px 5px 10px rgba(0,0,0,0.2)",
+            backgroundColor: (theme) => theme.palette.common.white,
+            borderRadius: "10px",
+            mb: "20px",
+            mt: "20px",
+            "& label.Mui-focused": {
+              borderColor: (theme) => theme.palette.secondary.main,
+              borderRadius: "10px",
             },
-            marginBottom: "20px",
-          }}
-          onClick={signInGoogle}
-        >
-          <GoogleIcon
-            style={{ height: "30px", width: "30px", marginRight: "15px" }}
-          />
-          <Typography
-            variant="body1"
-            sx={{
-              fontFamily: (theme) => theme.palette.typography.fontFamily,
-              fontWeight: "bold",
-              color: (theme) => theme.palette.textColor.col5,
-              textTransform: "capitalize",
-            }}
-          >
-            Continue with Google
-          </Typography>
-          <Box component="span" sx={{ flexGrow: "1" }} />
-          <ArrowRightIcon
-            style={{ height: "25px", width: "25px", color: "#2499E3" }}
-          />
-        </Button>
-        <Button
-          fullWidth
-          sx={{
-            borderStyle: "solid",
-            borderWidth: "1px",
-            borderColor: (theme) => theme.palette.secondary.bg2,
-            padding: "10px 15px",
-            transition: "0.2s ease",
-
-            "&:hover": {
-              boxShadow: "0px 5px 10px rgba(0,0,0,0.2)",
+            "& .MuiInput-underline:after": {
+              borderColor: (theme) => theme.palette.secondary.main,
+              borderRadius: "10px",
             },
-            marginBottom: "20px",
-          }}
-          onClick={signInFacebook}
-        >
-          <FbIcon
-            style={{ height: "25px", width: "25px", marginRight: "20px" }}
-          />
-          <Typography
-            variant="body1"
-            sx={{
-              fontFamily: (theme) => theme.palette.typography.fontFamily,
-              fontWeight: "bold",
-              color: (theme) => theme.palette.textColor.col5,
-              textTransform: "capitalize",
-            }}
-          >
-            Continue with Facebook
-          </Typography>
-          <Box component="span" sx={{ flexGrow: "1" }} />
-          <ArrowRightIcon
-            style={{ height: "25px", width: "25px", color: "#2499E3" }}
-          />
-        </Button>
-        <Link
-          component={NLink}
-          to="/login/login_use_email"
-          sx={{ textDecoration: "none" }}
-        >
-          <Button
-            fullWidth
-            sx={{
-              borderStyle: "solid",
-              borderWidth: "1px",
-              borderColor: (theme) => theme.palette.secondary.bg2,
-              padding: "10px 15px",
-              transition: "0.2s ease",
-
-              "&:hover": {
-                boxShadow: "0px 5px 10px rgba(0,0,0,0.2)",
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: (theme) => theme.palette.secondary.main,
+                borderRadius: "10px",
+                borderWidth: "2px",
               },
+              "&:hover fieldset": {
+                borderColor: (theme) => theme.palette.secondary.main,
+                borderRadius: "10px",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: (theme) => theme.palette.secondary.main,
+                borderRadius: "10px",
+              },
+            },
+            input: {
+              color: (theme) => theme.palette.textColor.col7,
+              fontFamily: (theme) => theme.palette.typography.fontFamily,
+              fontWeight: "bold",
+            },
+          }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <EmailIcon
+                  style={{
+                    height: "25px",
+                    width: "25px",
+                    color: "#26399C",
+                    margin: "0px 15px 0px 5px",
+                  }}
+                />
+              </InputAdornment>
+            ),
+          }}
+          type="email"
+          onChange={handleChange("email")}
+          value={payload.email}
+        />
+        <TextField
+          fullWidth
+          id="password"
+          placeholder="Password"
+          autoComplete="off"
+          sx={{
+            backgroundColor: (theme) => theme.palette.common.white,
+            borderRadius: "10px",
+            mb: "20px",
+            "& label.Mui-focused": {
+              borderColor: (theme) => theme.palette.secondary.main,
+              borderRadius: "10px",
+            },
+            "& .MuiInput-underline:after": {
+              borderColor: (theme) => theme.palette.secondary.main,
+              borderRadius: "10px",
+            },
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: (theme) => theme.palette.secondary.main,
+                borderRadius: "10px",
+                borderWidth: "2px",
+              },
+              "&:hover fieldset": {
+                borderColor: (theme) => theme.palette.secondary.main,
+                borderRadius: "10px",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: (theme) => theme.palette.secondary.main,
+                borderRadius: "10px",
+              },
+            },
+            input: {
+              color: (theme) => theme.palette.textColor.col7,
+              fontFamily: (theme) => theme.palette.typography.fontFamily,
+              fontWeight: "bold",
+            },
+          }}
+          type={payload.showpassword ? "text" : "password"}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                {payload.showpassword ? (
+                  <IconButton
+                    sx={{ padding: "4px", mr: "10px" }}
+                    onClick={handleChangePasswordHide}
+                  >
+                    <HideIcon
+                      style={{
+                        height: "25px",
+                        width: "25px",
+                        color: "#26399C",
+                      }}
+                    />
+                  </IconButton>
+                ) : (
+                  <IconButton
+                    sx={{ padding: "4px", mr: "10px" }}
+                    onClick={handleChangePasswordShow}
+                  >
+                    <ShowIcon
+                      style={{
+                        height: "25px",
+                        width: "25px",
+                        color: "#26399C",
+                      }}
+                    />
+                  </IconButton>
+                )}
+              </InputAdornment>
+            ),
+          }}
+          onChange={handleChange("password")}
+          value={payload.password}
+        />
+        <Button
+          fullWidth
+          sx={{
+            height: "50px",
+            backgroundColor: (theme) => theme.palette.secondary.main,
+            boxShadow: "0px 6px 0px #26399C",
+            borderRadius: "10px",
+            transition: "0.3s ease",
+            "&:hover": {
+              boxShadow: "none",
+              backgroundColor: (theme) => theme.palette.secondary.bg7,
+              transform: "translateY(10%)",
+            },
+            mb: "20px",
+          }}
+          onClick={LoginAccount}
+        >
+          <Typography
+            variant="h6"
+            sx={{
+              fontFamily: (theme) => theme.palette.typography.fontFamily,
+              fontWeight: "normal",
+              color: (theme) => theme.palette.textColor.col2,
+              textTransform: "capitalize",
             }}
           >
-            <EmailIcon
-              style={{
-                height: "20px",
-                width: "20px",
-                marginRight: "25px",
-                color: "#000000",
-              }}
-            />
-            <Typography
-              variant="body1"
-              sx={{
-                fontFamily: (theme) => theme.palette.typography.fontFamily,
-                fontWeight: "bold",
-                color: (theme) => theme.palette.textColor.col5,
-                textTransform: "capitalize",
-              }}
+            Login
+          </Typography>
+        </Button>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Typography
+            variant="body2"
+            sx={{
+              fontFamily: (theme) => theme.palette.typography.fontFamily,
+              fontWeight: "bold",
+              color: (theme) => theme.palette.textColor.col1,
+              mr: "10px",
+            }}
+          >
+            Don't have an account?
+          </Typography>
+          <Button sx={{ backgroundColor: "rgba(0,0,0,0.2)" }} size="small">
+            <Link
+              component={NLink}
+              to="/register"
+              sx={{ textDecoration: "none" }}
             >
-              Continue with Email
-            </Typography>
-            <Box component="span" sx={{ flexGrow: "1" }} />
-            <ArrowRightIcon
-              style={{ height: "25px", width: "25px", color: "#2499E3" }}
-            />
+              <Typography
+                variant="caption"
+                sx={{
+                  fontFamily: (theme) => theme.palette.typography.fontFamily,
+                  fontWeight: "bold",
+                  color: (theme) => theme.palette.textColor.col1,
+                  textTransform: "capitalize",
+                }}
+              >
+                Register
+              </Typography>
+            </Link>
           </Button>
-        </Link>
+        </Box>
       </Paper>
+      <MessageDialog
+        Open={dialog.isOpen}
+        onClose={handleChangeDialogClose}
+        message={dialog.message}
+      />
     </Box>
   );
 }

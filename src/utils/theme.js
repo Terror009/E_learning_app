@@ -22,7 +22,7 @@ export const theme = () => ({
       bg10: "#d4ebf2",
       bg11: "#e8f4f8",
       bg12: "#DC0000",
-      bg13: "#850000"
+      bg13: "#850000",
     },
     background: {
       default: "#FFFFFF",

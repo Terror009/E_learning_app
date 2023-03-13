@@ -24,6 +24,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import {
   getFirestore,
   doc,
+  where,
   query,
   collection,
   setDoc,
@@ -47,6 +48,7 @@ const step_data = [
 export default function StudentRoles() {
   const themes = useTheme();
   const auth = getAuth();
+  const db = getFirestore();
   const [activeStep, SetActiveStep] = useState(0);
   const maxSteps = step_data.length;
   const handleNext = () => {
@@ -58,33 +60,23 @@ export default function StudentRoles() {
   };
 
   useEffect(() => {
-    const SetData = async () => {
-      onAuthStateChanged(auth, async (user) => {
-        if (user) {
-          const db = getFirestore();
-          const usersDoc = doc(db, "Users", user.uid);
+    const SetData = () => {
+      const userRef = collection(db, "Users");
+      const q = query(userRef, where("userUid", "==", auth.currentUser.uid));
 
-          const userRef = collection(db, "Users");
-          const q = query(userRef);
-          onSnapshot(q, (querySnapShot) => {
-            querySnapShot.forEach((doc) => { 
-              if (!doc.data().userRole) {
-                setDoc(
-                  usersDoc,
-                  {
-                    userRole: "Student",
-                  },
-                  { merge: true }
-                );
-                  
-              } else {
-                SetActiveStep(doc.data().Steps);
-              }
-            });
-          });
-        } else {
-          console.log("error");
-        }
+      onSnapshot(q, (querySnapShot) => {
+        querySnapShot.forEach((docs) => {
+          if (docs.data().UserRole === "") {
+            const userDoc = doc(db, "Users", auth.currentUser.uid);
+            setDoc(
+              userDoc,
+              {
+                UserRole: "Student",
+              },
+              { merge: true }
+            );
+          }
+        });
       });
     };
     SetData();
@@ -119,7 +111,7 @@ export default function StudentRoles() {
         <Box sx={{ marginBottom: "20px" }}>
           {step_data[activeStep].step_com}
         </Box>
-    {/*     <Box
+        {/*     <Box
           sx={{
             display: "flex",
             width: { lg: "400px", md: "400px", sm: "300px", xs: "300px" },

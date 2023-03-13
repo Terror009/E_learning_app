@@ -40,21 +40,9 @@ export default function ProfilePicDialog({ Open, onClose }) {
     contentType: "image/png",
   };
   const PickAvatar = () => {
-    const storage = getStorage();
-    const storageRef = ref(storage, "avatar/" + auth.currentUser.uid);
-
-    /* uploadBytes(storageRef, avatar.pic, metadata)
-      .then((snapShot) => {
-        console.log(snapShot.metadata);
-         getDownloadURL(snapShot.ref).then((downloadURL) => {
-          console.log("File available at", downloadURL);
-        }); 
-      })
-      .catch((err) => {
-        console.log(err);
-      }); */
+  
   };
-  console.log(avatar.pic);
+ 
   return (
     <Modal
       open={Open}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   Box,
@@ -18,12 +18,24 @@ import UserIcon from "../../../../../assets/png/user.png";
 import { ReactComponent as EditIcon } from "../../../../../assets/svg/edit.svg";
 
 import "../../../../../utils/firebase";
-import { getFirestore, doc, setDoc } from "firebase/firestore"
-import { getStorage, getDownloadURL, ref } from "firebase/storage";
+import { Redirected, Status, UserType } from "../../../../../utils/userUrl";
+import { getAuth } from "firebase/auth";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  collection,
+  onSnapshot,
+  query,
+} from "firebase/firestore";
 
+import { Navigate } from "react-router-dom";
 export default function CreateProfile() {
+  const auth = getAuth();
   const [modal, SetModal] = useState(false);
-
+  const [payload, SetPayload] = useState({
+    User_nickname: "",
+  });
   const handleChangeModalOpen = () => {
     SetModal(true);
   };
@@ -32,9 +44,12 @@ export default function CreateProfile() {
     SetModal(false);
   };
 
-  const CreateProfile = () => {
+  const handleChangeName = (prop) => (e) => {
+    SetPayload({ ...payload, [prop]: e.target.value });
+  };
 
-  }
+  const CreateProfile = () => {};
+
   return (
     <Box>
       <Paper
@@ -118,6 +133,8 @@ export default function CreateProfile() {
               type="text"
               placeholder="Nickname"
               autoComplete="off"
+              onChange={handleChangeName("User_nickname")}
+              value={payload.User_nickname}
               fullWidth
               sx={{
                 backgroundColor: (theme) => theme.palette.common.white,
@@ -156,6 +173,7 @@ export default function CreateProfile() {
           </FormControl>
         </Box>
         <Button
+          onClick={CreateProfile}
           sx={{
             height: "50px",
             backgroundColor: (theme) => theme.palette.secondary.main,

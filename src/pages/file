@@ -1,0 +1,82 @@
+/* onSnapshot(q, (querySnapShot) => {
+            querySnapShot.forEach((userDoc) => {
+              if (!userDoc.exists) {
+                console.log("false");
+              } else {
+                if (userDoc.data().Status === true && userDoc.data().userRole) {
+                  Redirected("url", "/dashboard");
+                  Status("status", true);
+
+                  redirected.getItem("url");
+                  status.getItem("status");
+                 
+                } else if (
+                  userDoc.data().Status === false &&
+                  userDoc.data().userRole === "Student"
+                ) {
+                  Redirected("url", "/userrole_ver/student");
+                  UserType("type", userDoc.data().userRole);
+                  Status("status", false);
+                  status.getItem("status");
+                  redirected.getItem("url");
+                  usertype.getItem("type");
+                } else if (
+                  userDoc.data().Status === false &&
+                  userDoc.data().userRole === "Teacher"
+                ) {
+                  Redirected("url", "/userrole_ver/teacher");
+                  UserType("type", userDoc.data().userRole);
+                  Status("status", false);
+                  status.getItem("status");
+                  redirected.getItem("url");
+                  usertype.getItem("type");
+                } else {
+                  Redirected("url", "/userrole_ver");
+                  UserType("type", userDoc.data().userRole);
+                  Status("status", false);
+
+                  status.getItem("status");
+                  redirected.getItem("url");
+                  usertype.getItem("type");
+                }
+              }
+            });
+          }); */
+
+          /*    try {
+            const indexof = user.email.indexOf("@");
+            const db = getFirestore();
+            const userRef = collection(db, "Users");
+            const q = query(userRef);
+            
+            onSnapshot(q, (querySnapShot) => {
+              querySnapShot.forEach((doc) => {
+                if (!doc.exists) {
+                  const usersDoc = doc(db, "users", user.uid);
+                  setDoc(usersDoc, {
+                    email: user.email,
+                    username: user.displayName.substring(0, indexof),
+                    userUId: user.uid,
+                  });
+                } else {
+                  console.log("okay");
+                }
+              });
+            });
+          } catch (err) {
+            console.log(err);
+          } */
+
+          const indexof = user.email.indexOf("@");
+          const userDoc = doc(db, "Users", user.user.uid);
+          setDoc(
+            userDoc,
+            {
+              Email: user.user.email,
+              Username: user.user.displayName,
+              userUid: user.user.uid,
+              Status: false,
+              Steps: "0",
+            },
+            { merge: true }
+          );

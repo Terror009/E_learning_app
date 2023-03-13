@@ -33,6 +33,8 @@ export default function PersonalInfo() {
   const [payload, SetPayload] = useState({
     Phone_num: "",
     Age: "",
+    Fname: "",
+    Lname: "",
   });
 
   const handleChange = (prop) => (e) => {
@@ -60,21 +62,6 @@ export default function PersonalInfo() {
     ) {
       console.log("empty");
     } else {
-      const db = getFirestore();
-      const usersDoc = doc(db, "Users", auth.currentUser.uid);
-      setDoc(
-        usersDoc,
-        {
-          PhoneNumber: payload.Phone_num,
-          Age: payload.Age,
-          Month: months,
-          Day: days,
-          Year: year,
-          Steps: "1",
-          Status: false,
-        },
-        { merge: true }
-      );
     }
   };
 
@@ -117,7 +104,88 @@ export default function PersonalInfo() {
       >
         Personal Information
       </Typography>
-
+      <Box sx={{ display: "flex", marginBottom: "20px" }}>
+        <TextField
+          type="text"
+          autoComplete="off"
+          placeholder="Firstname"
+          onChange={handleChange("Fname")}
+          value={payload.Fname}
+          sx={{
+            backgroundColor: (theme) => theme.palette.common.white,
+            borderRadius: "10px",
+            mr: "10px",
+            "& label.Mui-focused": {
+              borderColor: (theme) => theme.palette.secondary.main,
+              borderRadius: "10px",
+            },
+            "& .MuiInput-underline:after": {
+              borderColor: (theme) => theme.palette.secondary.main,
+              borderRadius: "10px",
+            },
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: (theme) => theme.palette.secondary.main,
+                borderRadius: "10px",
+                borderWidth: "2px",
+              },
+              "&:hover fieldset": {
+                borderColor: (theme) => theme.palette.secondary.main,
+                borderRadius: "10px",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: (theme) => theme.palette.secondary.main,
+                borderRadius: "10px",
+              },
+            },
+            input: {
+              color: (theme) => theme.palette.textColor.col7,
+              fontFamily: (theme) => theme.palette.typography.fontFamily,
+              fontWeight: "bold",
+            },
+          }}
+        />
+        <TextField
+          type="text"
+          autoComplete="off"
+          placeholder="Lastname"
+          onChange={handleChange("Lname")}
+          value={payload.Lname}
+          sx={{
+            backgroundColor: (theme) => theme.palette.common.white,
+            borderRadius: "10px",
+            WebkitAppearance: "none",
+            "& label.Mui-focused": {
+              borderColor: (theme) => theme.palette.secondary.main,
+              borderRadius: "10px",
+            },
+            "& .MuiInput-underline:after": {
+              borderColor: (theme) => theme.palette.secondary.main,
+              borderRadius: "10px",
+            },
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: (theme) => theme.palette.secondary.main,
+                borderRadius: "10px",
+                borderWidth: "2px",
+              },
+              "&:hover fieldset": {
+                borderColor: (theme) => theme.palette.secondary.main,
+                borderRadius: "10px",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: (theme) => theme.palette.secondary.main,
+                borderRadius: "10px",
+              },
+            },
+            input: {
+              color: (theme) => theme.palette.textColor.col7,
+              fontFamily: (theme) => theme.palette.typography.fontFamily,
+              fontWeight: "bold",
+            },
+          }}
+        />
+      </Box>
       <Box sx={{ display: "flex", marginBottom: "20px" }}>
         <TextField
           type="tel"
