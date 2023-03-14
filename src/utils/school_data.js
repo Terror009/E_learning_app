@@ -3,6 +3,6 @@ export const schooltype = [
   "University",
 ];
 
-export const highSchoolYear = ["7", "8", "9", "10", "11", "12"];
+export const highSchoolYear = ["Grade 7", "Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"];
 
 export const universityYear = ["1st year", "2nd year", "3rd year", "4th year"];

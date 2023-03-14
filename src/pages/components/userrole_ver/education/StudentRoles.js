@@ -66,23 +66,19 @@ export default function StudentRoles() {
 
       onSnapshot(q, (querySnapShot) => {
         querySnapShot.forEach((docs) => {
-          if (docs.data().UserRole === "") {
-            const userDoc = doc(db, "Users", auth.currentUser.uid);
-            setDoc(
-              userDoc,
-              {
-                UserRole: "Student",
-              },
-              { merge: true }
-            );
-          }
+          SetActiveStep(docs.data().Steps);
         });
       });
     };
     SetData();
   }, []);
   return (
-    <Box>
+    <Box
+      sx={{
+        height: "100vh",
+        backgroundColor: (theme) => theme.palette.primary.bg4,
+      }}
+    >
       <UserRoleNavBar />
       <Box
         sx={{
@@ -90,8 +86,6 @@ export default function StudentRoles() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          height: "90vh",
-          backgroundColor: (theme) => theme.palette.primary.bg4,
           padding: "20px",
         }}
       >

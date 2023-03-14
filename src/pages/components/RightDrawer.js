@@ -52,6 +52,7 @@ export default function RightDrawer({ Open, onClose }) {
     signOut(auth)
       .then((user) => {
         isClose();
+        window.localStorage.clear();
         window.location.reload();
       })
       .catch((error) => {
@@ -93,7 +94,7 @@ export default function RightDrawer({ Open, onClose }) {
           {payload.email}
         </Typography>
         <MenuList>
-          <Link component={NLink}  to="/setting" sx={{ textDecoration: "none" }}>
+          <Link component={NLink} to="/setting" sx={{ textDecoration: "none" }}>
             <MenuItem>
               <SettingIcon
                 style={{
@@ -101,7 +102,7 @@ export default function RightDrawer({ Open, onClose }) {
                   width: "20px",
                   color: "#8A92A6",
                   marginRight: "10px",
-                  padding: "10px 0px"
+                  padding: "10px 0px",
                 }}
               />
               <Typography

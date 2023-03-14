@@ -50,8 +50,9 @@ export default function LogOutDialog({ Open, onClose }) {
     signOut(auth)
       .then((user) => {
         isClose();
+        window.localStorage.clear();
         window.location.reload();
-        localStorage.clear();
+        window.location.replace("/login");
       })
       .catch((error) => {
         console.log(error);

@@ -6,7 +6,8 @@ export const theme = () => ({
       bg1: "rgba(255,255,255,0.7)",
       bg2: "rgba(255,255,255,0.2)",
       bg3: "#5e0087",
-      bg4: "#29003b"
+      bg4: "#29003b",
+      bg5: "rgba(0,0,0,0.2)",
     },
     secondary: {
       main: "#3A57E8",
@@ -23,6 +24,7 @@ export const theme = () => ({
       bg11: "#e8f4f8",
       bg12: "#DC0000",
       bg13: "#850000",
+      bg14: "#E8DD8E",
     },
     background: {
       default: "#FFFFFF",

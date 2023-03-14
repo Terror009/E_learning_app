@@ -7,7 +7,7 @@ import "../../../utils/firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import LogOutDialog from "../LogOutDialog";
-
+import RightDrawer from "../RightDrawer";
 
 export default function UserRoleNavBar() {
   const auth = getAuth();
@@ -47,7 +47,10 @@ export default function UserRoleNavBar() {
   }, []);
   return (
     <Box>
-      <AppBar position="sticky" sx={{ backgroundColor: theme => theme.palette.primary.bg4}}>
+      <AppBar
+        position="sticky"
+        sx={{ backgroundColor: (theme) => theme.palette.primary.bg4 }}
+      >
         <Toolbar>
           <Typography
             variant="h6"
@@ -110,8 +113,8 @@ export default function UserRoleNavBar() {
             />
           </Button>
         </Toolbar>
-        <LogOutDialog Open={drawer.isOpen} onClose={handleCloseDrawer} />
       </AppBar>
+      <LogOutDialog Open={drawer.isOpen} onClose={handleCloseDrawer} />
     </Box>
   );
 }

@@ -28,11 +28,24 @@ import {
   universityYear,
 } from "../../../../../utils/school_data";
 
+import MessageDialog from "../../../MessageDialog";
+
 export default function SchoolBackground() {
   const auth = getAuth();
+  const db = getFirestore();
   const [schoolType, SetschollType] = useState("");
   const [highSchool, SethighSchool] = useState("");
   const [university, Setunversity] = useState("");
+
+  const [dialog, SetDialog] = useState({
+    isOpen: false,
+    message: "",
+    icon: false,
+  });
+
+  const handleChangeDialogClose = () => {
+    SetDialog({ ...dialog, isOpen: false });
+  };
 
   const handleChangeSchoolType = (e) => {
     SetschollType(e.target.value);
@@ -47,7 +60,40 @@ export default function SchoolBackground() {
   };
 
   const CreateSchoolBackground = () => {
-    
+    if (schoolType === "") {
+      SetDialog({
+        ...dialog,
+        message: "Please select value",
+        isOpen: true,
+        icon: false,
+      });
+    } else if (schoolType === "K12/High School" && highSchool === "") {
+      SetDialog({
+        ...dialog,
+        message: "Please select value",
+        isOpen: true,
+        icon: false,
+      });
+    } else if (schoolType === "University" && university === "") {
+      SetDialog({
+        ...dialog,
+        message: "Please select value",
+        isOpen: true,
+        icon: false,
+      });
+    } else {
+      const userDoc = doc(db, "Users", auth.currentUser.uid);
+      setDoc(
+        userDoc,
+        {
+          SchoolType: schoolType,
+          SchoolLevel:
+            schoolType === "K12/High School" ? highSchool : university,
+            Steps: "2"
+        },
+        { merge: true }
+      );
+    }
   };
   return (
     <Box>
@@ -57,6 +103,7 @@ export default function SchoolBackground() {
           flexDirection: "column",
           padding: "20px",
           width: { lg: "400px", md: "400px", sm: "300px", xs: "300px" },
+          backgroundColor: (theme) => theme.palette.secondary.bg9,
         }}
       >
         <Typography
@@ -244,6 +291,12 @@ export default function SchoolBackground() {
           </Typography>
         </Button>
       </Paper>
+      <MessageDialog
+        Open={dialog.isOpen}
+        message={dialog.message}
+        onClose={handleChangeDialogClose}
+        icon={dialog.icon}
+      />
     </Box>
   );
 }

@@ -10,6 +10,7 @@ import {
   Link,
   BottomNavigation,
   BottomNavigationAction,
+  useTheme,
 } from "@mui/material";
 
 import { Link as NLink } from "react-router-dom";
@@ -24,9 +25,14 @@ import { ReactComponent as HomeIcon } from "../../assets/svg/home.svg";
 import RightDrawer from "./RightDrawer";
 export default function NavBar() {
   const location = useLocation();
+  const themes = useTheme();
   const [drawer, SetDrawer] = useState({
     isOpen: false,
     exit: true,
+  });
+
+  const [payload, SetPayload] = useState({
+    userrole: "",
   });
 
   const handleOpenDrawer = () => {
@@ -36,6 +42,7 @@ export default function NavBar() {
   const handleCloseDrawer = () => {
     SetDrawer({ ...drawer, isOpen: false });
   };
+
   return (
     <AppBar position="sticky">
       <Toolbar>
@@ -49,216 +56,227 @@ export default function NavBar() {
           Quiz Bee
         </Typography>
         <Box component="span" sx={{ flexGrow: "1" }} />
-        <Box
-          sx={{
-            display: {
-              lg: "block",
-              md: "block",
-              sm: "block",
-              xs: "none",
-            },
-          }}
-        >
-          <Link
-            component={NLink}
-            sx={{ textDecoration: "none" }}
-            to="/dashboard"
+        {payload.userrole === "" ? (
+          ""
+        ) : (
+          <Box
+            sx={{
+              display: {
+                lg: "block",
+                md: "block",
+                sm: "block",
+                xs: "none",
+              },
+            }}
           >
-            <Button
-              sx={{
-                height: "65px",
-                width: {
-                  lg: "100px",
-                  md: "100px",
-                  sm: "inherit",
-                  xs: "100px",
-                },
-              }}
+            <Link
+              component={NLink}
+              sx={{ textDecoration: "none" }}
+              to="/dashboard"
             >
-              <Box
+              <Button
                 sx={{
-                  display: "flex",
-                  justifyContent: "space-evenly",
-                  alignItems: "center",
-                  width: "100%",
+                  height: "65px",
+                  width: {
+                    lg: "100px",
+                    md: "100px",
+                    sm: "inherit",
+                    xs: "100px",
+                  },
                 }}
               >
-                <HomeIcon
-                  style={{
-                    height: "20px",
-                    width: "20px",
-                    color: location.pathname.includes("/dashboard")
-                      ? "#26399C"
-                      : "#8A92A6",
-                  }}
-                />
-                <Typography
+                <Box
                   sx={{
-                    fontFamily: (theme) => theme.palette.typography.fontFamily,
-                    fontWeight: "bold",
-                    fontSize: "14px",
-                    display: {
-                      lg: "block",
-                      md: "block",
-                      sm: "none",
-                      xs: "none",
-                    },
-                    textTransform: "capitalize",
-                    color: location.pathname.includes("/dashboard")
-                      ? (theme) => theme.palette.secondary.bg1
-                      : (theme) => theme.palette.secondary.bg5,
+                    display: "flex",
+                    justifyContent: "space-evenly",
+                    alignItems: "center",
+                    width: "100%",
                   }}
                 >
-                  Home
-                </Typography>
-              </Box>
-              <Box
-                component="span"
-                sx={{
-                  position: "absolute",
-                  bottom: "0px",
-                  height: "4px",
-                  width: "100%",
-                  backgroundColor: location.pathname.includes("/dashboard")
-                    ? (theme) => theme.palette.secondary.bg1
-                    : "",
-                }}
-              />
-            </Button>
-          </Link>
-          <Link
-            component={NLink}
-            sx={{ textDecoration: "none" }}
-            to="/activity"
-          >
-            <Button
-              sx={{
-                backgroundColor: "",
-                height: "65px",
-                width: {
-                  lg: "100px",
-                  md: "100px",
-                  sm: "inherit",
-                  xs: "100px",
-                },
-              }}
+                  <HomeIcon
+                    style={{
+                      height: "20px",
+                      width: "20px",
+                      color: location.pathname.includes("/dashboard")
+                        ? "#26399C"
+                        : "#8A92A6",
+                    }}
+                  />
+                  <Typography
+                    sx={{
+                      fontFamily: (theme) =>
+                        theme.palette.typography.fontFamily,
+                      fontWeight: "bold",
+                      fontSize: "14px",
+                      display: {
+                        lg: "block",
+                        md: "block",
+                        sm: "none",
+                        xs: "none",
+                      },
+                      textTransform: "capitalize",
+                      color: location.pathname.includes("/dashboard")
+                        ? (theme) => theme.palette.secondary.bg1
+                        : (theme) => theme.palette.secondary.bg5,
+                    }}
+                  >
+                    Home
+                  </Typography>
+                </Box>
+                <Box
+                  component="span"
+                  sx={{
+                    position: "absolute",
+                    bottom: "0px",
+                    height: "4px",
+                    width: "100%",
+                    backgroundColor: location.pathname.includes("/dashboard")
+                      ? (theme) => theme.palette.secondary.bg1
+                      : "",
+                  }}
+                />
+              </Button>
+            </Link>
+            <Link
+              component={NLink}
+              sx={{ textDecoration: "none" }}
+              to="/activity"
             >
-              <Box
+              <Button
                 sx={{
-                  display: "flex",
-                  justifyContent: "space-evenly",
-                  alignItems: "center",
+                  backgroundColor: "",
+                  height: "65px",
+                  width: {
+                    lg: "100px",
+                    md: "100px",
+                    sm: "inherit",
+                    xs: "100px",
+                  },
                 }}
               >
-                <ActivityIcon
-                  style={{
-                    height: "20px",
-                    width: "20px",
-                    color: location.pathname.includes("/activity")
-                      ? "#26399C"
-                      : "#8A92A6",
-                  }}
-                />
-                <Typography
+                <Box
                   sx={{
-                    fontFamily: (theme) => theme.palette.typography.fontFamily,
-                    fontWeight: "bold",
-                    fontSize: "14px",
-                    display: {
-                      lg: "block",
-                      md: "block",
-                      sm: "none",
-                      xs: "none",
-                    },
-                    marginLeft: "5px",
-                    textTransform: "capitalize",
-                    color: location.pathname.includes("/activity")
-                      ? (theme) => theme.palette.secondary.bg1
-                      : (theme) => theme.palette.secondary.bg5,
+                    display: "flex",
+                    justifyContent: "space-evenly",
+                    alignItems: "center",
                   }}
                 >
-                  Activity
-                </Typography>
-              </Box>
-              <Box
-                component="span"
-                sx={{
-                  position: "absolute",
-                  bottom: "0px",
-                  height: "4px",
-                  width: "100%",
-                  backgroundColor: location.pathname.includes("/activity")
-                    ? (theme) => theme.palette.secondary.bg1
-                    : "",
-                }}
-              />
-            </Button>
-          </Link>
-          <Link component={NLink} sx={{ textDecoration: "none" }} to="/classes">
-            <Button
-              sx={{
-                backgroundColor: "",
-                height: "65px",
-                width: {
-                  lg: "100px",
-                  md: "100px",
-                  sm: "inherit",
-                  xs: "100px",
-                },
-              }}
+                  <ActivityIcon
+                    style={{
+                      height: "20px",
+                      width: "20px",
+                      color: location.pathname.includes("/activity")
+                        ? "#26399C"
+                        : "#8A92A6",
+                    }}
+                  />
+                  <Typography
+                    sx={{
+                      fontFamily: (theme) =>
+                        theme.palette.typography.fontFamily,
+                      fontWeight: "bold",
+                      fontSize: "14px",
+                      display: {
+                        lg: "block",
+                        md: "block",
+                        sm: "none",
+                        xs: "none",
+                      },
+                      marginLeft: "5px",
+                      textTransform: "capitalize",
+                      color: location.pathname.includes("/activity")
+                        ? (theme) => theme.palette.secondary.bg1
+                        : (theme) => theme.palette.secondary.bg5,
+                    }}
+                  >
+                    Activity
+                  </Typography>
+                </Box>
+                <Box
+                  component="span"
+                  sx={{
+                    position: "absolute",
+                    bottom: "0px",
+                    height: "4px",
+                    width: "100%",
+                    backgroundColor: location.pathname.includes("/activity")
+                      ? (theme) => theme.palette.secondary.bg1
+                      : "",
+                  }}
+                />
+              </Button>
+            </Link>
+            <Link
+              component={NLink}
+              sx={{ textDecoration: "none" }}
+              to="/classes"
             >
-              <Box
+              <Button
                 sx={{
-                  display: "flex",
-                  justifyContent: "space-evenly",
-                  alignItems: "center",
-                  width: "100%",
+                  backgroundColor: "",
+                  height: "65px",
+                  width: {
+                    lg: "100px",
+                    md: "100px",
+                    sm: "inherit",
+                    xs: "100px",
+                  },
                 }}
               >
-                <DegreeIcon
-                  style={{
-                    height: "20px",
-                    width: "20px",
-                    color: location.pathname.includes("/classes")
-                      ? "#26399C"
-                      : "#8A92A6",
-                  }}
-                />
-                <Typography
+                <Box
                   sx={{
-                    fontFamily: (theme) => theme.palette.typography.fontFamily,
-                    fontWeight: "bold",
-                    fontSize: "14px",
-                    display: {
-                      lg: "block",
-                      md: "block",
-                      sm: "none",
-                      xs: "none",
-                    },
-                    textTransform: "capitalize",
-                    color: location.pathname.includes("/classes")
-                      ? (theme) => theme.palette.secondary.bg1
-                      : (theme) => theme.palette.secondary.bg5,
+                    display: "flex",
+                    justifyContent: "space-evenly",
+                    alignItems: "center",
+                    width: "100%",
                   }}
                 >
-                  Classes
-                </Typography>
-              </Box>
-              <Box
-                component="span"
-                sx={{
-                  position: "absolute",
-                  bottom: "0px",
-                  height: "4px",
-                  width: "100%",
-                  backgroundColor: location.pathname.includes("/classes")
-                    ? (theme) => theme.palette.secondary.bg1
-                    : "",
-                }}
-              />
-            </Button>
-          </Link>
-        </Box>
+                  <DegreeIcon
+                    style={{
+                      height: "20px",
+                      width: "20px",
+                      color: location.pathname.includes("/classes")
+                        ? "#26399C"
+                        : "#8A92A6",
+                    }}
+                  />
+                  <Typography
+                    sx={{
+                      fontFamily: (theme) =>
+                        theme.palette.typography.fontFamily,
+                      fontWeight: "bold",
+                      fontSize: "14px",
+                      display: {
+                        lg: "block",
+                        md: "block",
+                        sm: "none",
+                        xs: "none",
+                      },
+                      textTransform: "capitalize",
+                      color: location.pathname.includes("/classes")
+                        ? (theme) => theme.palette.secondary.bg1
+                        : (theme) => theme.palette.secondary.bg5,
+                    }}
+                  >
+                    Classes
+                  </Typography>
+                </Box>
+                <Box
+                  component="span"
+                  sx={{
+                    position: "absolute",
+                    bottom: "0px",
+                    height: "4px",
+                    width: "100%",
+                    backgroundColor: location.pathname.includes("/classes")
+                      ? (theme) => theme.palette.secondary.bg1
+                      : "",
+                  }}
+                />
+              </Button>
+            </Link>
+          </Box>
+        )}
         <Box component="span" sx={{ flexGrow: "1" }} />
         <Box>
           <IconButton

@@ -30,9 +30,17 @@ import {
 } from "firebase/firestore";
 
 import { Navigate } from "react-router-dom";
+import MessageDialog from "../../../MessageDialog";
 export default function CreateProfile() {
   const auth = getAuth();
+  const db = getFirestore();
   const [modal, SetModal] = useState(false);
+  const [dialog, SetDialog] = useState({
+    isOpen: false,
+    message: "",
+    icon: false,
+  });
+
   const [payload, SetPayload] = useState({
     User_nickname: "",
   });
@@ -44,11 +52,33 @@ export default function CreateProfile() {
     SetModal(false);
   };
 
+  const handleChangeDialogClose = () => {
+    SetDialog({ ...dialog, isOpen: false });
+  };
+
   const handleChangeName = (prop) => (e) => {
     SetPayload({ ...payload, [prop]: e.target.value });
   };
 
-  const CreateProfile = () => {};
+  const CreateProfile = () => {
+    if (payload.User_nickname === "") {
+      SetDialog({
+        ...dialog,
+        message: "Please enter value in fields",
+        isOpen: true,
+        icon: false,
+      });
+    } else {
+      const userDoc = doc(db, "Users", auth.currentUser.uid);
+      setDoc(
+        userDoc,
+        {
+          nickname: payload.User_nickname,
+        },
+        { merge: true }
+      );
+    }
+  };
 
   return (
     <Box>
@@ -58,6 +88,7 @@ export default function CreateProfile() {
           flexDirection: "column",
           padding: "20px",
           width: { lg: "400px", md: "400px", sm: "300px", xs: "250px" },
+          backgroundColor: (theme) => theme.palette.secondary.bg9,
         }}
       >
         <Typography
@@ -99,7 +130,7 @@ export default function CreateProfile() {
                 width: "100px",
                 borderStyle: "solid",
                 borderWidth: "5px",
-                borderColor: (theme) => theme.palette.common.white,
+                borderColor: (theme) => theme.palette.secondary.bg9,
               }}
               src={UserIcon}
               alt="user_icon"
@@ -110,16 +141,16 @@ export default function CreateProfile() {
                 position: "absolute",
                 bottom: "-5px",
                 right: "-15px",
-                backgroundColor: (theme) => theme.palette.common.white,
+                backgroundColor: (theme) => theme.palette.secondary.bg9,
                 borderStyle: "solid",
                 borderWidth: "5px",
-                borderColor: (theme) => theme.palette.common.white,
+                borderColor: (theme) => theme.palette.secondary.bg9,
                 marginBottom: "20px",
                 "&:hover": {
-                  backgroundColor: (theme) => theme.palette.common.white,
+                  backgroundColor: (theme) => theme.palette.secondary.bg9,
                   borderStyle: "solid",
                   borderWidth: "5px",
-                  borderColor: (theme) => theme.palette.common.white,
+                  borderColor: (theme) => theme.palette.secondary.bg9,
                 },
               }}
             >
@@ -137,7 +168,7 @@ export default function CreateProfile() {
               value={payload.User_nickname}
               fullWidth
               sx={{
-                backgroundColor: (theme) => theme.palette.common.white,
+                backgroundColor: (theme) => theme.palette.secondary.bg9,
                 borderRadius: "10px",
                 marginRight: "10px",
                 "& label.Mui-focused": {
