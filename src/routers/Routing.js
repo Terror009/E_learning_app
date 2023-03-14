@@ -240,7 +240,7 @@ export default function Routing() {
                   <PrivateRouter Component={TeacherRoles} isAuth={payload} />
                 }
               />
-            ) : userData.role === "" && userData.status === false ? (
+            ) : userData.role === undefined && userData.status === false ? (
               <Route
                 path="/userrole_ver"
                 element={
