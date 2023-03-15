@@ -85,7 +85,7 @@ export default function NavBar() {
         >
           Quiz Bee
         </Typography>
-        <Box component="span" sx={{ flexGrow: "1" }} />
+        <Box component="span" sx={{ flexGrow: ".75" }} />
         {payload.userrole === "" ? (
           ""
         ) : payload.userrole === "Student" ? (

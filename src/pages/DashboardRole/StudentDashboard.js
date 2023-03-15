@@ -104,7 +104,7 @@ export default function StudentDashboard() {
                 lg: "5px",
                 md: "5px",
                 sm: "5px",
-                xs: "10px"
+                xs: "10px",
               },
               width: {
                 lg: "400px",
@@ -339,27 +339,33 @@ export default function StudentDashboard() {
             >
               It looks like you don't have recent activity
             </Typography>
-            <Button
-              sx={{
-                height: "45px",
-                width: "150px",
-                backgroundColor: (theme) => theme.palette.secondary.main,
-                borderRadius: "30px",
-                boxShadow: "0px 4px 0px #26399C",
-                "&:hover": {
-                  backgroundColor: (theme) => theme.palette.secondary.bg8,
-                },
-              }}
+            <Link
+              component={NLink}
+              to="/activity"
+              sx={{ textDecoration: "none" }}
             >
-              <Typography
+              <Button
                 sx={{
-                  fontFamily: (theme) => theme.palette.typography.fontFamily,
-                  fontWeight: "normal",
+                  height: "45px",
+                  width: "150px",
+                  backgroundColor: (theme) => theme.palette.secondary.main,
+                  borderRadius: "30px",
+                  boxShadow: "0px 4px 0px #26399C",
+                  "&:hover": {
+                    backgroundColor: (theme) => theme.palette.secondary.bg8,
+                  },
                 }}
               >
-                Find Activity
-              </Typography>
-            </Button>
+                <Typography
+                  sx={{
+                    fontFamily: (theme) => theme.palette.typography.fontFamily,
+                    fontWeight: "normal",
+                  }}
+                >
+                  Find Activity
+                </Typography>
+              </Button>
+            </Link>
           </Paper>
         ) : (
           <Paper></Paper>
@@ -416,27 +422,33 @@ export default function StudentDashboard() {
             >
               It looks like you don't have join classes yet!!
             </Typography>
-            <Button
-              sx={{
-                height: "45px",
-                width: "150px",
-                backgroundColor: (theme) => theme.palette.secondary.main,
-                borderRadius: "30px",
-                boxShadow: "0px 4px 0px #26399C",
-                "&:hover": {
-                  backgroundColor: (theme) => theme.palette.secondary.bg8,
-                },
-              }}
+            <Link
+              component={NLink}
+              to="/classes"
+              sx={{ textDecoration: "none" }}
             >
-              <Typography
+              <Button
                 sx={{
-                  fontFamily: (theme) => theme.palette.typography.fontFamily,
-                  fontWeight: "normal",
+                  height: "45px",
+                  width: "150px",
+                  backgroundColor: (theme) => theme.palette.secondary.main,
+                  borderRadius: "30px",
+                  boxShadow: "0px 4px 0px #26399C",
+                  "&:hover": {
+                    backgroundColor: (theme) => theme.palette.secondary.bg8,
+                  },
                 }}
               >
-                Join Class
-              </Typography>
-            </Button>
+                <Typography
+                  sx={{
+                    fontFamily: (theme) => theme.palette.typography.fontFamily,
+                    fontWeight: "normal",
+                  }}
+                >
+                  Join Class
+                </Typography>
+              </Button>
+            </Link>
           </Paper>
         ) : (
           <Paper></Paper>

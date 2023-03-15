@@ -9,7 +9,7 @@ import {
   BottomNavigationAction,
   Link,
 } from "@mui/material";
-import { Link as NLink } from "react-router-dom";
+import { Link as NLink, useLocation } from "react-router-dom";
 
 import { ReactComponent as DegreeIcon } from "../../assets/svg/more-user.svg";
 import { ReactComponent as ActivityIcon } from "../../assets/svg/recent.svg";
@@ -29,6 +29,7 @@ import {
 export default function BottomNav() {
   const auth = getAuth();
   const db = getFirestore();
+  const location = useLocation();
   const [payload, SetPayload] = useState({
     userrole: "",
   });
@@ -59,7 +60,6 @@ export default function BottomNav() {
           display: { lg: "none", md: "none", sm: "none", xs: "flex" },
           justifyContent: "center",
           width: "100%",
-          backgroundColor: "red"
         }}
       >
         <motion.div
@@ -67,7 +67,7 @@ export default function BottomNav() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 10, opacity: 0 }}
           transition={{ duration: 0.2 }}
-          style={{ width: "100%" }}
+          style={{ display: "flex", justifyContent: "center", width: "100%" }}
         >
           <Paper
             sx={{
@@ -93,13 +93,21 @@ export default function BottomNav() {
                 }}
               >
                 <HomeIcon
-                  style={{ height: "20px", width: "20px", color: "#26399C" }}
+                  style={{
+                    height: "20px",
+                    width: "20px",
+                    color: location.pathname.includes("/dashboard")
+                      ? "#26399C"
+                      : "#8A92A6",
+                  }}
                 />
                 <Typography
                   sx={{
                     fontFamily: (theme) => theme.palette.typography.fontFamily,
                     fontWeight: "bold",
-                    color: (theme) => theme.palette.textColor.col1,
+                    color: location.pathname.includes("/dashboard")
+                      ? (theme) => theme.palette.textColor.col1
+                      : (theme) => theme.palette.textColor.col4,
                     textTransform: "capitalize",
                   }}
                 >
@@ -122,13 +130,21 @@ export default function BottomNav() {
                 }}
               >
                 <ActivityIcon
-                  style={{ height: "20px", width: "20px", color: "#26399C" }}
+                  style={{
+                    height: "20px",
+                    width: "20px",
+                    color: location.pathname.includes("/activity")
+                      ? "#26399C"
+                      : "#8A92A6",
+                  }}
                 />
                 <Typography
                   sx={{
                     fontFamily: (theme) => theme.palette.typography.fontFamily,
                     fontWeight: "bold",
-                    color: (theme) => theme.palette.textColor.col1,
+                    color: location.pathname.includes("/activity")
+                      ? (theme) => theme.palette.textColor.col1
+                      : (theme) => theme.palette.textColor.col4,
                     textTransform: "capitalize",
                   }}
                 >
@@ -151,13 +167,21 @@ export default function BottomNav() {
                 }}
               >
                 <DegreeIcon
-                  style={{ height: "20px", width: "20px", color: "#26399C" }}
+                  style={{
+                    height: "20px",
+                    width: "20px",
+                    color: location.pathname.includes("/classes")
+                      ? "#26399C"
+                      : "#8A92A6",
+                  }}
                 />
                 <Typography
                   sx={{
                     fontFamily: (theme) => theme.palette.typography.fontFamily,
                     fontWeight: "bold",
-                    color: (theme) => theme.palette.textColor.col1,
+                    color: location.pathname.includes("/classes")
+                      ? (theme) => theme.palette.textColor.col1
+                      : (theme) => theme.palette.textColor.col4,
                     textTransform: "capitalize",
                   }}
                 >
