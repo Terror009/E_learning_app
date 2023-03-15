@@ -15,6 +15,8 @@ export default function Classes() {
       <NavBar />
       <Box
         sx={{
+          height: "100%",
+          backgroundColor: (theme) => theme.palette.secondary.bg9,
           padding: "20px",
         }}
       >
@@ -79,12 +81,7 @@ export default function Classes() {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              height: {
-                lg: "300px",
-                md: "300px",
-                sm: "300px",
-                xs: "300px",
-              },
+              height: "50%",
               width: "100%",
               backgroundColor: (theme) => theme.palette.secondary.bg9,
             }}
@@ -108,35 +105,34 @@ export default function Classes() {
         ) : (
           ""
         )}
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          width: "100%",
-          height: "40px",
-          backgroundColor: (theme) => theme.palette.secondary.bg9,
-          mb: "20px",
-        }}
-      >
-        <Typography
+        <Box
           sx={{
-            fontFamily: (theme) => theme.palette.typography.fontFamily,
-            fontWeight: "normal",
-            fontSize: {
-              lg: "14px",
-              md: "14px",
-              sm: "14px",
-              xs: "10px",
-            },
-            color: (theme) => theme.palette.textColor.col4,
-            textAlign: "center",
+            display: "flex",
+            justifyContent: "center",
+            width: "100%",
+            backgroundColor: (theme) => theme.palette.secondary.bg9,
           }}
         >
-          Assignments from these classes, if any, will be visible on the Home
-          Page
-        </Typography>
+          <Typography
+            sx={{
+              fontFamily: (theme) => theme.palette.typography.fontFamily,
+              fontWeight: "normal",
+              fontSize: {
+                lg: "14px",
+                md: "14px",
+                sm: "14px",
+                xs: "12px",
+              },
+              color: (theme) => theme.palette.textColor.col4,
+              textAlign: "center",
+            }}
+          >
+            Assignments from these classes, if any, will be visible on the Home
+            Page
+          </Typography>
+        </Box>
       </Box>
+
       <BottomNav />
       <Box
         sx={{
@@ -150,6 +146,7 @@ export default function Classes() {
           sx={{
             fontFamily: (theme) => theme.palette.typography.fontFamily,
             fontWeight: "600",
+            textAlign: "center",
             color: (theme) => theme.palette.textColor.col4,
           }}
         >
