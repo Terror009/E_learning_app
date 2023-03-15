@@ -13,7 +13,11 @@ export default function Classes() {
       }}
     >
       <NavBar />
-      <Box>
+      <Box
+        sx={{
+          padding: "20px",
+        }}
+      >
         <Box
           sx={{
             display: "flex",
@@ -23,7 +27,6 @@ export default function Classes() {
               sm: "row",
               xs: "column",
             },
-            padding: "20px",
             mt: "60px",
           }}
         >
@@ -76,16 +79,26 @@ export default function Classes() {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              height: "400px",
+              height: {
+                lg: "300px",
+                md: "300px",
+                sm: "300px",
+                xs: "300px",
+              },
               width: "100%",
               backgroundColor: (theme) => theme.palette.secondary.bg9,
             }}
           >
             <Typography
-              variant="h6"
               sx={{
                 fontFamily: (theme) => theme.palette.typography.fontFamily,
                 fontWeight: "normal",
+                fontSize: {
+                  lg: "20px",
+                  md: "20px",
+                  sm: "20px",
+                  xs: "18px",
+                },
                 color: (theme) => theme.palette.textColor.col4,
               }}
             >
@@ -103,15 +116,21 @@ export default function Classes() {
           width: "100%",
           height: "40px",
           backgroundColor: (theme) => theme.palette.secondary.bg9,
+          mb: "20px",
         }}
       >
         <Typography
-          variant="body2"
           sx={{
             fontFamily: (theme) => theme.palette.typography.fontFamily,
             fontWeight: "normal",
+            fontSize: {
+              lg: "14px",
+              md: "14px",
+              sm: "14px",
+              xs: "10px",
+            },
             color: (theme) => theme.palette.textColor.col4,
-            textAlign: "center"
+            textAlign: "center",
           }}
         >
           Assignments from these classes, if any, will be visible on the Home
@@ -119,7 +138,13 @@ export default function Classes() {
         </Typography>
       </Box>
       <BottomNav />
-      <Box sx={{ padding: "20px", height: "20px" }}>
+      <Box
+        sx={{
+          padding: "20px",
+          height: "20px",
+          backgroundColor: (theme) => theme.palette.common.white,
+        }}
+      >
         <Typography
           variant="caption"
           sx={{
