@@ -23,7 +23,21 @@ import { ReactComponent as ActivityIcon } from "../../assets/svg/recent.svg";
 import { ReactComponent as HomeIcon } from "../../assets/svg/home.svg";
 
 import RightDrawer from "./RightDrawer";
+
+import "../../utils/firebase";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {
+  getFirestore,
+  doc,
+  collection,
+  where,
+  query,
+  onSnapshot,
+} from "firebase/firestore";
+
 export default function NavBar() {
+  const auth = getAuth();
+  const db = getFirestore();
   const location = useLocation();
   const themes = useTheme();
   const [drawer, SetDrawer] = useState({
@@ -43,6 +57,22 @@ export default function NavBar() {
     SetDrawer({ ...drawer, isOpen: false });
   };
 
+  useEffect(() => {
+    const SetData = () => {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          const userRef = collection(db, "Users");
+          const q = query(userRef, where("userUid", "==", user.uid));
+          onSnapshot(q, (querySnapShot) => {
+            querySnapShot.forEach((docs) => {
+              SetPayload({ ...payload, userrole: docs.data().userRole });
+            });
+          });
+        }
+      });
+    };
+    SetData();
+  }, []);
   return (
     <AppBar position="sticky">
       <Toolbar>
@@ -58,7 +88,7 @@ export default function NavBar() {
         <Box component="span" sx={{ flexGrow: "1" }} />
         {payload.userrole === "" ? (
           ""
-        ) : (
+        ) : payload.userrole === "Student" ? (
           <Box
             sx={{
               display: {
@@ -276,6 +306,8 @@ export default function NavBar() {
               </Button>
             </Link>
           </Box>
+        ) : (
+          ""
         )}
         <Box component="span" sx={{ flexGrow: "1" }} />
         <Box>

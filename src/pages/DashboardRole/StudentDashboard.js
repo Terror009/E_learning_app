@@ -26,7 +26,7 @@ export default function StudentDashboard() {
     nousername: "",
   });
   const [activity, SetActivity] = useState(0);
-
+  const [classes, SetClasses] = useState(0);
   useEffect(() => {
     const SetData = () => {
       auth.onAuthStateChanged((user) => {
@@ -94,7 +94,18 @@ export default function StudentDashboard() {
           <Box
             sx={{
               display: "flex",
-              padding: "5px",
+              flexDirection: {
+                lg: "row",
+                md: "row",
+                sm: "row",
+                xs: "column",
+              },
+              padding: {
+                lg: "5px",
+                md: "5px",
+                sm: "5px",
+                xs: "10px"
+              },
               width: {
                 lg: "400px",
                 md: "400px",
@@ -116,6 +127,12 @@ export default function StudentDashboard() {
                 borderRadius: "10px",
                 outline: "none",
                 boxShadow: "0px 2px 5px rgba(0,0,0,0.2) inset",
+                mb: {
+                  lg: "0px",
+                  md: "0px",
+                  sm: "0px",
+                  xs: "10px",
+                },
                 "& label.Mui-focused": {
                   borderColor: "transparent",
                   borderRadius: "10px",
@@ -149,7 +166,12 @@ export default function StudentDashboard() {
               sx={{
                 height: "52px",
                 backgroundColor: (theme) => theme.palette.secondary.main,
-                marginLeft: "5px",
+                marginLeft: {
+                  lg: "5px",
+                  md: "5px",
+                  sm: "5px",
+                  xs: "0px",
+                },
                 borderRadius: "10px",
                 boxShadow: "0px 4px 0px #26399C",
                 "&:hover": {
@@ -336,6 +358,83 @@ export default function StudentDashboard() {
                 }}
               >
                 Find Activity
+              </Typography>
+            </Button>
+          </Paper>
+        ) : (
+          <Paper></Paper>
+        )}
+      </Box>
+      <Box
+        sx={{
+          backgroundColor: "",
+          padding: {
+            lg: "10px",
+            md: "10px",
+            sm: "10px",
+            xs: "0px",
+          },
+        }}
+      >
+        <Typography
+          variant="h5"
+          sx={{
+            fontFamily: (theme) => theme.palette.typography.fontFamily,
+            fontWeight: "600",
+            color: (theme) => theme.palette.textColor.col7,
+            marginBottom: "20px",
+            marginTop: {
+              lg: "0px",
+              md: "0px",
+              sm: "0px",
+              xs: "20px",
+            },
+          }}
+        >
+          Classes
+        </Typography>
+        {!classes ? (
+          <Paper
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "300px",
+              width: "100%",
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{
+                color: (theme) => theme.palette.textColor.col7,
+                fontFamily: (theme) => theme.palette.typography.fontFamily,
+                fontWeight: "normal",
+                marginBottom: "20px",
+                textAlign: "center",
+              }}
+            >
+              It looks like you don't have join classes yet!!
+            </Typography>
+            <Button
+              sx={{
+                height: "45px",
+                width: "150px",
+                backgroundColor: (theme) => theme.palette.secondary.main,
+                borderRadius: "30px",
+                boxShadow: "0px 4px 0px #26399C",
+                "&:hover": {
+                  backgroundColor: (theme) => theme.palette.secondary.bg8,
+                },
+              }}
+            >
+              <Typography
+                sx={{
+                  fontFamily: (theme) => theme.palette.typography.fontFamily,
+                  fontWeight: "normal",
+                }}
+              >
+                Join Class
               </Typography>
             </Button>
           </Paper>

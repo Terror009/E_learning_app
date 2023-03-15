@@ -19,7 +19,7 @@ import { ReactComponent as EditIcon } from "../../../../../assets/svg/edit.svg";
 
 import "../../../../../utils/firebase";
 import { Redirected, Status, UserType } from "../../../../../utils/userUrl";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import {
   getFirestore,
   doc,
@@ -27,11 +27,13 @@ import {
   collection,
   onSnapshot,
   query,
+  where,
 } from "firebase/firestore";
 
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import MessageDialog from "../../../MessageDialog";
 export default function CreateProfile() {
+  const navigate = useNavigate();
   const auth = getAuth();
   const db = getFirestore();
   const [modal, SetModal] = useState(false);
@@ -43,6 +45,7 @@ export default function CreateProfile() {
 
   const [payload, SetPayload] = useState({
     User_nickname: "",
+    status: false,
   });
   const handleChangeModalOpen = () => {
     SetModal(true);
@@ -60,6 +63,28 @@ export default function CreateProfile() {
     SetPayload({ ...payload, [prop]: e.target.value });
   };
 
+  useEffect(() => {
+    const SetData = () => {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          const userRef = collection(db, "Users");
+          const q = query(userRef, where("userUid", "==", user.uid));
+          onSnapshot(q, (querySnapShot) => {
+            querySnapShot.forEach((docs) => {
+              SetPayload({
+                ...dialog,
+                User_nickname: docs.data().nickname,
+                status: docs.data().Status,
+              });
+            });
+          });
+        }
+      });
+    };
+
+    SetData();
+  }, []);
+
   const CreateProfile = () => {
     if (payload.User_nickname === "") {
       SetDialog({
@@ -69,11 +94,14 @@ export default function CreateProfile() {
         icon: false,
       });
     } else {
+  
       const userDoc = doc(db, "Users", auth.currentUser.uid);
       setDoc(
         userDoc,
         {
           nickname: payload.User_nickname,
+          Steps: "3",
+          Status: true,
         },
         { merge: true }
       );
@@ -204,7 +232,7 @@ export default function CreateProfile() {
           </FormControl>
         </Box>
         <Button
-          onClick={CreateProfile}
+          onClick={() => {CreateProfile(); navigate("/setting");}}
           sx={{
             height: "50px",
             backgroundColor: (theme) => theme.palette.secondary.main,
@@ -231,6 +259,12 @@ export default function CreateProfile() {
         </Button>
       </Paper>
       <ProfilePicDialog Open={modal} onClose={handleChangeModalClose} />
+      <MessageDialog
+        Open={dialog.isOpen}
+        message={dialog.message}
+        onClose={handleChangeDialogClose}
+        icon={dialog.icon}
+      />
     </Box>
   );
 }

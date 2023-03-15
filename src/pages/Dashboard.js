@@ -482,7 +482,6 @@ export default function Dashboard() {
           </Box>
         </Box>
       )}
-      <BottomNav />
       <Box sx={{ padding: "20px", height: "20px" }}>
         <Typography
           variant="caption"
@@ -495,6 +494,7 @@ export default function Dashboard() {
           Copyright © 2023 All Right Reserved
         </Typography>
       </Box>
+      <BottomNav />
     </Box>
   );
 }

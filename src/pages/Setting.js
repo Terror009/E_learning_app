@@ -600,7 +600,7 @@ export default function Setting() {
                 </Button>
               </Box>
             )}
-            {payload.Steps !== 3 ? (
+            {!payload.Status ? (
               <Box
                 sx={{
                   display: "flex",

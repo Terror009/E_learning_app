@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   Paper,
@@ -15,12 +15,42 @@ import { ReactComponent as DegreeIcon } from "../../assets/svg/more-user.svg";
 import { ReactComponent as ActivityIcon } from "../../assets/svg/recent.svg";
 import { ReactComponent as HomeIcon } from "../../assets/svg/home.svg";
 import { motion } from "framer-motion";
+
+import "../../utils/firebase";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {
+  getFirestore,
+  doc,
+  collection,
+  query,
+  where,
+  onSnapshot,
+} from "firebase/firestore";
 export default function BottomNav() {
+  const auth = getAuth();
+  const db = getFirestore();
   const [payload, SetPayload] = useState({
-    role: "",
+    userrole: "",
   });
 
-  if (payload.role === "Student") {
+  useEffect(() => {
+    const SetData = () => {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          const userRef = collection(db, "Users");
+          const q = query(userRef, where("userUid", "==", user.uid));
+          onSnapshot(q, (querySnapShot) => {
+            querySnapShot.forEach((docs) => {
+              SetPayload({ ...payload, userrole: docs.data().userRole });
+            });
+          });
+        }
+      });
+    };
+    SetData();
+  }, []);
+
+  if (payload.userrole === "Student") {
     return (
       <Box
         sx={{
@@ -29,6 +59,7 @@ export default function BottomNav() {
           display: { lg: "none", md: "none", sm: "none", xs: "flex" },
           justifyContent: "center",
           width: "100%",
+          backgroundColor: "red"
         }}
       >
         <motion.div
