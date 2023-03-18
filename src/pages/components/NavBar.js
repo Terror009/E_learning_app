@@ -310,22 +310,43 @@ export default function NavBar() {
           ""
         )}
         <Box component="span" sx={{ flexGrow: "1" }} />
-        <Box>
-          <IconButton
-            onClick={handleOpenDrawer}
-            sx={{ backgroundColor: (theme) => theme.palette.secondary.bg9 }}
-          >
-            {!drawer.isOpen ? (
-              <MenuIcon
-                style={{ height: "25px", width: "25px", color: "#26399C" }}
-              />
-            ) : (
-              <ExitIcon
-                style={{ height: "25px", width: "25px", color: "#26399C" }}
-              />
-            )}
-          </IconButton>
-        </Box>
+        {payload.userrole === "" ? (
+          <Box>
+            <IconButton
+              onClick={handleOpenDrawer}
+              sx={{ backgroundColor: (theme) => theme.palette.secondary.bg9 }}
+            >
+              {!drawer.isOpen ? (
+                <MenuIcon
+                  style={{ height: "25px", width: "25px", color: "#26399C" }}
+                />
+              ) : (
+                <ExitIcon
+                  style={{ height: "25px", width: "25px", color: "#26399C" }}
+                />
+              )}
+            </IconButton>
+          </Box>
+        ) : payload.userrole === "Student" ? (
+          <Box>
+            <IconButton
+              onClick={handleOpenDrawer}
+              sx={{ backgroundColor: (theme) => theme.palette.secondary.bg9 }}
+            >
+              {!drawer.isOpen ? (
+                <MenuIcon
+                  style={{ height: "25px", width: "25px", color: "#26399C" }}
+                />
+              ) : (
+                <ExitIcon
+                  style={{ height: "25px", width: "25px", color: "#26399C" }}
+                />
+              )}
+            </IconButton>
+          </Box>
+        ) : (
+          ""
+        )}
       </Toolbar>
       <RightDrawer Open={drawer.isOpen} onClose={handleCloseDrawer} />
     </AppBar>

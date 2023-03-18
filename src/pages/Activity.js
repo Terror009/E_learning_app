@@ -124,7 +124,7 @@ export default function Activity() {
                     fontWeight: "bold",
                     textTransform: "capitalize",
                     color:
-                      tablink === row.tab_num
+                      tablink === row.tab_num 
                         ? (theme) => theme.palette.textColor.col1
                         : (theme) => theme.palette.textColor.col4,
                     pointerEvents: "none",

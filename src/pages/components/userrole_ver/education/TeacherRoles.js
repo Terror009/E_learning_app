@@ -9,15 +9,30 @@ import {
   Select,
   MenuItem,
   FormControl,
+  InputLabel,
 } from "@mui/material";
 
 import UserRoleNavBar from "../UserRoleNavBar";
+import MessageDialog from "../../MessageDialog";
+import { useNavigate } from "react-router-dom";
 
 import "../../../../utils/firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  collection,
+  query,
+  onSnapshot,
+  where,
+} from "firebase/firestore";
+import { schooltype } from "../../../../utils/school_data";
 
 export default function TeacherRoles() {
   const auth = getAuth();
+  const db = getFirestore();
+  const navigate = useNavigate();
   const [payload, SetPayload] = useState({
     Age: "",
     PhoneNumber: "",
@@ -25,7 +40,18 @@ export default function TeacherRoles() {
     Lname: "",
     Proper_call: "",
     UserName: "",
+    SchoolType: "",
   });
+  const [dialog, SetDialog] = useState({
+    isOpen: false,
+    message: "",
+    icon: false,
+  });
+
+  const handleChangeDialogClose = () => {
+    SetDialog({ ...dialog, isOpen: false });
+  };
+
   const proper_name_call = ["Mr.", "Ms.", "Mrs."];
 
   const ITEM_HEIGHT = 40;
@@ -46,12 +72,55 @@ export default function TeacherRoles() {
     const SetData = () => {
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          SetPayload({ ...payload, UserName: user.displayName });
+          const userRef = collection(db, "Users");
+          const q = query(
+            userRef,
+            where("userUid", "==", auth.currentUser.uid)
+          );
+          onSnapshot(q, (querySnapShot) => {
+            querySnapShot.forEach((docs) => {
+              SetPayload({ ...payload, UserName: docs.data().nickname });
+            });
+          });
         }
       });
     };
     SetData();
   }, []);
+  console.log(payload);
+  const CreatePersonalData = () => {
+    if (
+      payload.Fname === "" ||
+      payload.Lname === "" ||
+      payload.Proper_call === "" ||
+      payload.PhoneNumber === "" ||
+      payload.Age === "" ||
+      payload.SchoolType === ""
+    ) {
+      SetDialog({
+        ...dialog,
+        message: "Please enter value in fields",
+        isOpen: true,
+        icon: false,
+      });
+    } else {
+      const userDoc = doc(db, "Users", auth.currentUser.uid);
+      setDoc(
+        userDoc,
+        {
+          proper_call: payload.Proper_call,
+          Firstname: payload.Fname,
+          Lastname: payload.Lname,
+          Age: payload.Age,
+          Phonenumber: payload.PhoneNumber,
+          SchoolType: payload.SchoolType,
+          nickname: payload.UserName,
+          Status: true
+        },
+        { merge: true }
+      );
+    }
+  };
   return (
     <Box
       sx={{
@@ -288,7 +357,7 @@ export default function TeacherRoles() {
           <TextField
             fullWidth
             placeholder="Username"
-            onChange={handleChange("Username")}
+            onChange={handleChange("UserName")}
             value={payload.UserName}
             sx={{
               backgroundColor: (theme) => theme.palette.secondary.bg9,
@@ -326,7 +395,43 @@ export default function TeacherRoles() {
               },
             }}
           />
+          <FormControl fullWidth>
+            <Select
+              MenuProps={MenuProps}
+              placeholder="SchoolType"
+              onChange={handleChange("SchoolType")}
+              value={payload.SchoolType}
+              sx={{
+                borderRadius: "10px",
+                borderStyle: "solid",
+                borderWidth: "2px",
+                borderColor: (theme) => theme.palette.secondary.main,
+                fontFamily: (theme) => theme.palette.typography.fontFamily,
+                fontWeight: "bold",
+                color: (theme) => theme.palette.textColor.col7,
+                mb: "20px",
+              }}
+            >
+              {schooltype.map((row) => (
+                <MenuItem
+                  key={row}
+                  value={row}
+                  sx={{
+                    fontFamily: (theme) => theme.palette.typography.fontFamily,
+                    fontWeight: "bold",
+                    color: (theme) => theme.palette.textColor.col4,
+                  }}
+                >
+                  {row}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <Button
+            onClick={() => {
+              CreatePersonalData();
+              navigate("/setting");
+            }}
             fullWidth
             sx={{
               height: "50px",
@@ -354,6 +459,12 @@ export default function TeacherRoles() {
           </Button>
         </Paper>
       </Box>
+      <MessageDialog
+        Open={dialog.isOpen}
+        message={dialog.message}
+        onClose={handleChangeDialogClose}
+        icon={dialog.icon}
+      />
     </Box>
   );
 }

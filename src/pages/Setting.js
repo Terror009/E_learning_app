@@ -49,6 +49,7 @@ export default function Setting() {
     role: "",
     Steps: "",
     Status: "",
+    proper_call: "",
   });
   const [dialog, SetDialog] = useState({
     isOpen: false,
@@ -70,22 +71,36 @@ export default function Setting() {
             const q = query(userRef, where("userUid", "==", user.uid));
             onSnapshot(q, (querySnapShot) => {
               querySnapShot.forEach((docs) => {
-                SetPayload({
-                  ...payload,
-                  Fname: docs.data().Firstname,
-                  Lname: docs.data().Lastname,
-                  Phonenum: docs.data().Phonenumber,
-                  Age: docs.data().Age,
-                  day: docs.data().Birthday.Day,
-                  month: docs.data().Birthday.Month,
-                  year: docs.data().Birthday.Year,
-                  nickname: docs.data().nickname,
-                  schooltype: docs.data().SchoolType,
-                  schoollevel: docs.data().SchoolLevel,
-                  role: docs.data().userRole,
-                  Steps: docs.data().Steps,
-                  Status: docs.data().Status,
-                });
+                if (docs.data().userRole === "Student") {
+                  SetPayload({
+                    ...payload,
+                    Fname: docs.data().Firstname,
+                    Lname: docs.data().Lastname,
+                    Phonenum: docs.data().Phonenumber,
+                    Age: docs.data().Age,
+                    day: docs.data().Birthday.Day,
+                    month: docs.data().Birthday.Month,
+                    year: docs.data().Birthday.Year,
+                    nickname: docs.data().nickname,
+                    schooltype: docs.data().SchoolType,
+                    schoollevel: docs.data().SchoolLevel,
+                    role: docs.data().userRole,
+                    Steps: docs.data().Steps,
+                    Status: docs.data().Status,
+                  });
+                } else if (docs.data().userRole === "Teacher") {
+                  SetPayload({
+                    ...payload,
+                    Fname: docs.data().Firstname,
+                    Lname: docs.data().Lastname,
+                    Phonenum: docs.data().Phonenumber,
+                    Age: docs.data().Age,
+                    nickname: docs.data().nickname,
+                    schooltype: docs.data().SchoolType,
+                    role: docs.data().userRole,
+                    Status: docs.data().Status,
+                  });
+                }
               });
             });
           } catch (err) {
@@ -773,7 +788,7 @@ export default function Setting() {
             </Button>
           </Paper>
           <Box sx={{ display: "flex", alignItems: "center", mb: "20px" }}>
-            <Link>
+            <Link component={NLink} sx={{ textDecoration: "none" }}>
               <Typography
                 variant="caption"
                 sx={{

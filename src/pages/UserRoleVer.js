@@ -37,20 +37,40 @@ export default function UserRoleVer() {
   };
 
   const CreateRole = () => {
-    if (window.localStorage.getItem("role") === "Student") {
+    if (window.localStorage.getItem("role").includes("Student")) {
       const userDoc = doc(db, "Users", auth.currentUser.uid);
       setDoc(
         userDoc,
         {
+          Firstname: "",
+          Lastname: "",
+          Phonenumber: "",
+          Age: "",
+          Birthday: { Day: "", Month: "", Year: "" },
+          SchoolType: "",
+          SchoolLevel: "",
+          userUid: auth.currentUser.uid,
+          nickname: auth.currentUser.displayName,
+          Status: false,
+          Steps: "0",
           userRole: "Student",
         },
         { merge: true }
       );
-    } else if (window.localStorage.getItem("role") === "Teacher") {
+    } else if (window.localStorage.getItem("role").includes("Teacher")) {
       const userDoc = doc(db, "Users", auth.currentUser.uid);
       setDoc(
         userDoc,
         {
+          Firstname: "",
+          Lastname: "",
+          proper_call: "",
+          Phonenumber: "",
+          Age: "",
+          SchoolType: "",
+          userUid: auth.currentUser.uid,
+          nickname: auth.currentUser.displayName,
+          Status: false,
           userRole: "Teacher",
         },
         { merge: true }
@@ -108,7 +128,10 @@ export default function UserRoleVer() {
           >
             <Button
               id="Student"
-              onClick={(e) => {handleChange(e); CreateRole()}}
+              onClick={(e) => {
+                handleChange(e);
+                CreateRole();
+              }}
               sx={{
                 height: {
                   lg: "200px",
@@ -155,7 +178,10 @@ export default function UserRoleVer() {
           >
             <Button
               id="Teacher"
-              onClick={(e) => {handleChange(e); CreateRole()}}
+              onClick={(e) => {
+                handleChange(e);
+                CreateRole();
+              }}
               sx={{
                 height: {
                   lg: "200px",

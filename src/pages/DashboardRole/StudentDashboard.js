@@ -17,12 +17,20 @@ import {
 import { Link as NLink } from "react-router-dom";
 import "../../utils/firebase";
 import { getAuth } from "firebase/auth";
-
+import {
+  getFirestore,
+  onSnapshot,
+  where,
+  query,
+  collection,
+} from "firebase/firestore";
 export default function StudentDashboard() {
   const auth = getAuth();
+  const db = getFirestore();
   const [payload, SetPayload] = useState({
     email: "",
     username: "",
+    nickname: "",
     nousername: "",
   });
   const [activity, SetActivity] = useState(0);
@@ -36,6 +44,22 @@ export default function StudentDashboard() {
             username: user.displayName,
             email: user.email,
           });
+          try {
+            const userRef = collection(db, "Users");
+            const q = query(userRef, where("userUid", "==", user.uid));
+            onSnapshot(q, (querySnapShot) => {
+              querySnapShot.forEach((docs) => {
+                SetPayload({
+                  ...payload,
+                  role: docs.data().userRole,
+                  status: docs.data().Status,
+                  nickname: docs.data().nickname,
+                });
+              });
+            });
+          } catch (err) {
+            console.log(err);
+          }
         } else {
           SetPayload({
             ...payload,
@@ -209,10 +233,9 @@ export default function StudentDashboard() {
           <Box
             sx={{
               display: "flex",
-              justifyContent: "space-around",
+              justifyContent: "center",
               alignItems: "center",
               height: "20px",
-              width: "200px",
               backgroundColor: "yellow",
               padding: "15px 5px",
               borderRadius: "30px",
@@ -225,6 +248,7 @@ export default function StudentDashboard() {
                 borderStyle: "solid",
                 borderWidth: "2px",
                 borderColor: (theme) => theme.palette.secondary.bg7,
+                mr: "10px"
               }}
             />
             <Typography
@@ -232,9 +256,14 @@ export default function StudentDashboard() {
               sx={{
                 fontFamily: (theme) => theme.palette.typography.fontFamily,
                 fontWeight: "bold",
+                textAlign: "center"
               }}
             >
-              {auth.currentUser ? payload.username : payload.nousername}
+              {auth.currentUser && !payload.nickname
+                ? payload.username
+                : payload.nickname
+                ? payload.nickname
+                : payload.nousername}
             </Typography>
           </Box>
           <Box

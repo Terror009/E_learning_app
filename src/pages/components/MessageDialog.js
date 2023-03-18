@@ -10,6 +10,7 @@ export default function MessageDialog({ Open, onClose, message, icon }) {
   };
   return (
     <Modal
+      
       open={Open}
       onClose={isClose}
       sx={{
@@ -17,6 +18,7 @@ export default function MessageDialog({ Open, onClose, message, icon }) {
         justifyContent: "center",
         alignItems: "center",
         padding: "20px",
+        ml: window.location.pathname === "/teacherclasses" ? "15%" : "0px",
       }}
     >
       <Paper

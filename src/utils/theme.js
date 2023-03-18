@@ -25,6 +25,8 @@ export const theme = () => ({
       bg12: "#DC0000",
       bg13: "#850000",
       bg14: "#E8DD8E",
+      bg15: "#ff0000",
+      bg16: "#8b0000"
     },
     background: {
       default: "#FFFFFF",

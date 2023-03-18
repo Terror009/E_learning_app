@@ -19,6 +19,8 @@ import Setting from "../pages/Setting";
 import Loading from "../pages/Loading";
 import StudentDashboard from "../pages/DashboardRole/StudentDashboard";
 import TeacherClass from "../pages/TeacherClass";
+import TeacherReport from "../pages/TeacherReport";
+import ClassRoom from "../pages/ClassRoom";
 
 import UserRoleVer from "../pages/UserRoleVer";
 import StudentRoles from "../pages/components/userrole_ver/education/StudentRoles";
@@ -63,6 +65,7 @@ export default function Routing() {
     isAuth: false,
     isLoading: true,
   });
+  const [link, SetLink] = useState("");
   useEffect(() => {
     const SetData = () => {
       auth.onAuthStateChanged(async (user) => {
@@ -75,41 +78,6 @@ export default function Routing() {
               isAuth: true,
               isLoading: false,
             });
-            try {
-              const userRef = collection(db, "Users");
-              const q = query(userRef, where("userUid", "==", user.uid));
-              onSnapshot(q, (querySnapShot) => {
-                querySnapShot.forEach((docs) => {
-                  SetUserData((prevState) => ({
-                    ...userData,
-                    role: docs.data().userRole,
-                    status: docs.data().Status,
-                  }));
-                });
-                if (querySnapShot.empty) {
-                  const userDoc = doc(db, "Users", user.uid);
-                  setDoc(
-                    userDoc,
-                    {
-                      Firstname: "",
-                      Lastname: "",
-                      Phonenumber: "",
-                      Age: "",
-                      Birthday: { Day: "", Month: "", Year: "" },
-                      SchoolType: "",
-                      SchoolLevel: "",
-                      userUid: user.uid,
-                      nickname: user.displayName,
-                      Status: false,
-                      Steps: "0",
-                    },
-                    { merge: true }
-                  );
-                }
-              });
-            } catch (err) {
-              console.log(err);
-            }
           } else {
             setPayload("");
             if (window.location.pathname.includes("/register")) {
@@ -150,11 +118,39 @@ export default function Routing() {
     };
     SetData();
   }, []);
-  console.log(userData);
+
+  useEffect(() => {
+    const getData = async () => {
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          const userRef = collection(db, "Users");
+          const q = query(userRef, where("userUid", "==", user.uid));
+          const unsubscribe = onSnapshot(q, (querySnapShot) => {
+            querySnapShot.forEach((docs) => {
+              if (docs.exists) {
+                SetUserData({
+                  ...userData,
+                  role: docs.data().userRole,
+                  status: docs.data().Status,
+                });
+              }
+            });
+          });
+        }
+      });
+    };
+    getData();
+  }, []);
+
+  useEffect(() => {
+    const getLink = () => {
+      SetLink(window.localStorage.getItem("url"));
+    };
+    getLink();
+  }, [link]);
   const handleChangeDialogClose = () => {
     SetDialog({ ...dialog, isOpen: true });
   };
-  console.log(userData.role);
   if (!data.isAuth && data.isLoading) {
     return (
       <ThemeProvider theme={Theme}>
@@ -184,7 +180,7 @@ export default function Routing() {
               path="/dashboard"
               element={<PrivateRouter Component={Dashboard} isAuth={payload} />}
             />
-            {userData.role === "Student" ? (
+            {userData.role === "Student" && userData.status ? (
               <React.Fragment>
                 <Route
                   path="/activity"
@@ -199,13 +195,27 @@ export default function Routing() {
                   }
                 />
               </React.Fragment>
-            ) : userData.role === "Teacher" ? (
-              <Route
-                path="/teacherclasses"
-                element={
-                  <PrivateRouter Component={TeacherClass} isAuth={payload} />
-                }
-              />
+            ) : userData.role === "Teacher" && userData.status ? (
+              <React.Fragment>
+                <Route
+                  path="/teacherclasses"
+                  element={
+                    <PrivateRouter Component={TeacherClass} isAuth={payload} />
+                  }
+                />
+                <Route
+                  path="/teacherreport"
+                  element={
+                    <PrivateRouter Component={TeacherReport} isAuth={payload} />
+                  }
+                />
+                <Route
+                  path="/teacherclasses/class=?"
+                  element={
+                    <PrivateRouter Component={ClassRoom} isAuth={payload} />
+                  }
+                />
+              </React.Fragment>
             ) : (
               <React.Fragment>
                 <Route
@@ -240,7 +250,8 @@ export default function Routing() {
                   <PrivateRouter Component={TeacherRoles} isAuth={payload} />
                 }
               />
-            ) : userData.role === undefined && userData.status === false ? (
+            ) : userData.role === undefined ||
+              (userData.role === "" && userData.status === false) ? (
               <Route
                 path="/userrole_ver"
                 element={
@@ -248,7 +259,7 @@ export default function Routing() {
                 }
               />
             ) : (
-              ""
+              <Route path="*" element={<PageNotFound />} />
             )}
 
             <Route path="*" element={<PageNotFound />} />

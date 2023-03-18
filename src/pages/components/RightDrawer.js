@@ -20,13 +20,20 @@ import { ReactComponent as LogoutIcon } from "../../assets/svg/logout.svg";
 
 import "../../utils/firebase";
 import { getAuth, signOut } from "firebase/auth";
-
+import {
+  getFirestore,
+  collection,
+  where,
+  query,
+  onSnapshot,
+} from "firebase/firestore";
 export default function RightDrawer({ Open, onClose }) {
   const auth = getAuth();
-
+  const db = getFirestore();
   const [payload, SetPayload] = useState({
     username: "",
     email: "",
+    nickname: "",
   });
   useEffect(() => {
     const ReadData = () => {
@@ -37,6 +44,22 @@ export default function RightDrawer({ Open, onClose }) {
             username: user.displayName,
             email: user.email,
           });
+          try {
+            const userRef = collection(db, "Users");
+            const q = query(userRef, where("userUid", "==", user.uid));
+            onSnapshot(q, (querySnapShot) => {
+              querySnapShot.forEach((docs) => {
+                SetPayload({
+                  ...payload,
+                  nickname: docs.data().nickname,
+                  username: user.displayName,
+                  email: user.email,
+                });
+              });
+            });
+          } catch (err) {
+            console.log(err);
+          }
         } else {
           SetPayload({ ...payload, username: "", email: "" });
         }
@@ -64,6 +87,7 @@ export default function RightDrawer({ Open, onClose }) {
       open={Open}
       onClose={isClose}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      anchorEl={Boolean(Open)}
       sx={{ top: "60px" }}
     >
       <Box
@@ -80,7 +104,9 @@ export default function RightDrawer({ Open, onClose }) {
             color: (theme) => theme.palette.textColor.col4,
           }}
         >
-          {payload.username}
+          {auth.currentUser && !payload.nickname
+            ? payload.username
+            : payload.nickname}
         </Typography>
         <Typography
           variant="body2"

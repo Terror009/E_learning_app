@@ -72,7 +72,7 @@ export default function CreateProfile() {
           onSnapshot(q, (querySnapShot) => {
             querySnapShot.forEach((docs) => {
               SetPayload({
-                ...dialog,
+                ...payload,
                 User_nickname: docs.data().nickname,
                 status: docs.data().Status,
               });

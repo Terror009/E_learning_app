@@ -1,28 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { Box, Paper, Typography, AppBar, Toolbar } from "@mui/material";
 
-import {
-  Box,
-  Paper,
-  Typography,
-  TextField,
-  AppBar,
-  Toolbar,
-} from "@mui/material";
-
-import "../../utils/firebase";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import {
-  getFirestore,
-  collection,
-  query,
-  where,
-  onSnapshot,
-} from "firebase/firestore";
-
-import TeacherDashboardDrawer from "../components/TeacherDashboardDrawer";
-import NavBar from "../components/NavBar";
-
-export default function TeacherDashboard() {
+import TeacherDashboardDrawer from "./components/TeacherDashboardDrawer";
+export default function TeacherReport() {
   return (
     <Box
       sx={{
