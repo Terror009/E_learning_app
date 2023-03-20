@@ -4,8 +4,17 @@ import { Button, Modal, Paper, Typography, Box } from "@mui/material";
 import { motion } from "framer-motion";
 
 import "../../utils/firebase";
-import { getFirestore, doc, deleteDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  deleteDoc,
+  collection,
+  query,
+  onSnapshot,
+} from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 export default function DeleteClassModal({ open, onClose, classId }) {
+  const auth = getAuth();
   const db = getFirestore();
   const isClose = () => {
     onClose();
@@ -20,20 +29,35 @@ export default function DeleteClassModal({ open, onClose, classId }) {
     getData();
   }, [classId]);
 
-  const deleteClass = async () => {
-    console.log(class_id);
+  const deleteClass = () => {
     const userDoc = doc(db, "Classes", class_id);
-    try {
-      await deleteDoc(userDoc)
-        .then(() => {
-          
-        })
-        .catch((err) => {
+    const userRef = collection(db, "Classes");
+    const q = query(userRef);
+    onSnapshot(q, async (snapshot) => {
+      if (snapshot.size >= 1) {
+        try {
+          await deleteDoc(userDoc)
+            .then(() => {})
+            .catch((err) => {
+              console.log(err);
+            });
+        } catch (err) {
           console.log(err);
-        });
-    } catch (err) {
-      console.log(err);
-    }
+        }
+      } else {
+        try {
+          await deleteDoc(userDoc)
+            .then(() => {
+              window.location.reload();
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    });
   };
 
   return (
@@ -44,7 +68,12 @@ export default function DeleteClassModal({ open, onClose, classId }) {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        ml: "15%",
+        ml: {
+          lg: "15%",
+          md: "0px",
+          sm: "0px",
+          xs: "0px",
+        },
       }}
     >
       <motion.div
@@ -58,9 +87,32 @@ export default function DeleteClassModal({ open, onClose, classId }) {
           alignItems: "center",
         }}
       >
-        <Paper sx={{ width: "400px", padding: "20px", borderRadius: "15px" }}>
-          <Typography>Delete this class?</Typography>
-          <Typography>Deleted class cannot be recovered</Typography>
+        <Paper
+          sx={{
+            width: { lg: "400px", md: "400px", sm: "400px", xs: "300px" },
+            padding: "20px",
+            borderRadius: "15px",
+          }}
+        >
+          <Typography
+            sx={{
+              fontFamily: (theme) => theme.palette.typography.fontFamily,
+              fontSize: "20px",
+              color: (theme) => theme.palette.textColor.col6,
+            }}
+          >
+            Delete this class?
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              fontFamily: (theme) => theme.palette.typography.fontFamily,
+              color: (theme) => theme.palette.textColor.col6,
+              mb: "20px"
+            }}
+          >
+            Deleted class cannot be recovered
+          </Typography>
           <Box sx={{ display: "flex" }}>
             <Button
               onClick={isClose}
@@ -77,7 +129,6 @@ export default function DeleteClassModal({ open, onClose, classId }) {
                   backgroundColor: (theme) => theme.palette.secondary.main,
                   transform: "translateY(10%)",
                 },
-                mb: "20px",
               }}
             >
               <Typography
@@ -108,7 +159,6 @@ export default function DeleteClassModal({ open, onClose, classId }) {
                   backgroundColor: (theme) => theme.palette.secondary.bg15,
                   transform: "translateY(10%)",
                 },
-                mb: "20px",
               }}
             >
               <Typography

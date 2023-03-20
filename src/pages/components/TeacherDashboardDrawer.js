@@ -71,17 +71,31 @@ export default function TeacherDashboardDrawer() {
       >
         Quiz Bee
       </Typography>
-      <Typography
-        sx={{
-          fontFamily: (theme) => theme.palette.typography.fontFamily,
-          fontWeight: "bold",
-          color: (theme) => theme.palette.textColor.col1,
-          textTransform: "capitalize",
-          margin: "0px 0px 20px 10px",
-        }}
-      >
-        {payload.proper_call + " " + payload.lname}
-      </Typography>
+      {payload ? (
+        <Typography
+          sx={{
+            fontFamily: (theme) => theme.palette.typography.fontFamily,
+            fontWeight: "bold",
+            color: (theme) => theme.palette.textColor.col1,
+            textTransform: "capitalize",
+            margin: "0px 0px 20px 10px",
+          }}
+        >
+          {payload.proper_call + " " + payload.lname}
+        </Typography>
+      ) : (
+        <Typography
+          sx={{
+            fontFamily: (theme) => theme.palette.typography.fontFamily,
+            fontWeight: "bold",
+            color: (theme) => theme.palette.textColor.col1,
+            textTransform: "capitalize",
+            margin: "0px 0px 20px 10px",
+          }}
+        >
+          No Account
+        </Typography>
+      )}
       <Divider orientation="horizontal" sx={{ mb: "20px" }} />
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         <Link component={NLink} to="/dashboard" sx={{ textDecoration: "none" }}>
@@ -191,7 +205,7 @@ export default function TeacherDashboardDrawer() {
       </Box>
       <Box component="span" sx={{ flexGrow: ".5" }} />
       <Divider orientation="horizontal" />
-      <Link component={NLink} to="/setting" sx={{ textDecoration: "none"}}>
+      <Link component={NLink} to="/setting" sx={{ textDecoration: "none" }}>
         <Button
           fullWidth
           sx={{

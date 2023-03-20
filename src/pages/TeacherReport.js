@@ -2,6 +2,8 @@ import React from "react";
 import { Box, Paper, Typography, AppBar, Toolbar } from "@mui/material";
 
 import TeacherDashboardDrawer from "./components/TeacherDashboardDrawer";
+import TeacherNavBar from "./components/TeacherNavBar";
+
 export default function TeacherReport() {
   return (
     <Box
@@ -16,7 +18,7 @@ export default function TeacherReport() {
           position: "relative",
           display: {
             lg: "block",
-            md: "block",
+            md: "none",
             sm: "none",
             xs: "none",
           },
@@ -34,14 +36,15 @@ export default function TeacherReport() {
           postion: "relative",
           display: "flex",
           flexDirection: "column",
-          width: "90%",
+          width: {
+            lg: "90%",
+            md: "100%",
+            sm: "100%",
+            xs: "100%"
+          },
         }}
       >
-        <AppBar position="sticky">
-          <Toolbar>
-            <Typography>Quiz Bee</Typography>
-          </Toolbar>
-        </AppBar>
+        <TeacherNavBar />
         <Box sx={{ height: "100%" }}></Box>
         <Box
           sx={{

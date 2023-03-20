@@ -74,6 +74,13 @@ export default function EditClass({
 
   const isClose = () => {
     onClose();
+    SetPayload({
+      ...payload,
+      Classname: classname,
+      Subject: subject,
+      Section: section,
+    });
+    SetColor(color_code);
   };
 
   const handleChange = (prop) => (e) => {
@@ -116,7 +123,7 @@ export default function EditClass({
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        ml: "15%",
+        ml: { lg: "15%", md: "0px", sm: "0px", xs: "0px" },
       }}
     >
       <motion.div
@@ -130,7 +137,13 @@ export default function EditClass({
           alignItems: "center",
         }}
       >
-        <Paper sx={{ width: "400px", padding: "20px", borderRadius: "15px" }}>
+        <Paper
+          sx={{
+            width: { lg: "400px", md: "400px", sm: "400px", xs: "300px" },
+            padding: "20px",
+            borderRadius: "15px",
+          }}
+        >
           <Typography
             variant="h6"
             sx={{
@@ -423,6 +436,116 @@ export default function EditClass({
               </Paper>
             </Collapse>
           </Box>
+          <TextField
+            onChange={handleChange("Subject")}
+            value={payload.Subject ? payload.Subject : ""}
+            placeholder="Subject"
+            fullWidth
+            sx={{
+              backgroundColor: (theme) => theme.palette.common.white,
+              borderRadius: "10px",
+              mb: "20px",
+              "& label.Mui-focused": {
+                borderColor: (theme) => theme.palette.secondary.main,
+                borderRadius: "10px",
+              },
+              "& .MuiInput-underline:after": {
+                borderColor: (theme) => theme.palette.secondary.main,
+                borderRadius: "10px",
+              },
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: (theme) => theme.palette.secondary.main,
+                  borderRadius: "10px",
+                  borderWidth: "2px",
+                },
+                "&:hover fieldset": {
+                  borderColor: (theme) => theme.palette.secondary.main,
+                  borderRadius: "10px",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: (theme) => theme.palette.secondary.main,
+                  borderRadius: "10px",
+                },
+              },
+              input: {
+                color: (theme) => theme.palette.textColor.col7,
+                fontFamily: (theme) => theme.palette.typography.fontFamily,
+                fontWeight: "bold",
+              },
+            }}
+            inputProps={{ style: { textTransform: "uppercase" } }}
+          />
+          <TextField
+            onChange={handleChange("Section")}
+            value={payload.Section ? payload.Section : ""}
+            placeholder="Section"
+            fullWidth
+            sx={{
+              backgroundColor: (theme) => theme.palette.common.white,
+              borderRadius: "10px",
+              mb: "20px",
+              "& label.Mui-focused": {
+                borderColor: (theme) => theme.palette.secondary.main,
+                borderRadius: "10px",
+              },
+              "& .MuiInput-underline:after": {
+                borderColor: (theme) => theme.palette.secondary.main,
+                borderRadius: "10px",
+              },
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: (theme) => theme.palette.secondary.main,
+                  borderRadius: "10px",
+                  borderWidth: "2px",
+                },
+                "&:hover fieldset": {
+                  borderColor: (theme) => theme.palette.secondary.main,
+                  borderRadius: "10px",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: (theme) => theme.palette.secondary.main,
+                  borderRadius: "10px",
+                },
+              },
+              input: {
+                color: (theme) => theme.palette.textColor.col7,
+                fontFamily: (theme) => theme.palette.typography.fontFamily,
+                fontWeight: "bold",
+              },
+            }}
+            inputProps={{ style: { textTransform: "uppercase" } }}
+          />
+          <Button
+            onClick={() => {
+              editClass();
+            }}
+            fullWidth
+            sx={{
+              height: "40px",
+              backgroundColor: (theme) => theme.palette.secondary.main,
+              boxShadow: "0px 6px 0px #26399C",
+              borderRadius: "10px",
+              transition: "0.3s ease",
+              "&:hover": {
+                boxShadow: "none",
+                backgroundColor: (theme) => theme.palette.secondary.bg7,
+                transform: "translateY(10%)",
+              },
+              mb: "20px",
+            }}
+          >
+            <Typography
+              sx={{
+                color: (theme) => theme.palette.textColor.col2,
+                fontFamily: (theme) => theme.palette.typography.fontFamily,
+                fontWeight: "normal",
+                textTransform: "capitalize",
+              }}
+            >
+              Create Class
+            </Typography>
+          </Button>
         </Paper>
       </motion.div>
     </Modal>

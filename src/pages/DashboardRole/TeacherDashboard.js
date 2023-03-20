@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import {
-  Box,
-  Paper,
-  Typography,
-  TextField,
-  AppBar,
-  Toolbar,
-} from "@mui/material";
+import { Box, Paper, Typography, TextField } from "@mui/material";
 
 import "../../utils/firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -19,8 +12,8 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 
+import TeacherNavBar from "../components/TeacherNavBar";
 import TeacherDashboardDrawer from "../components/TeacherDashboardDrawer";
-import NavBar from "../components/NavBar";
 
 export default function TeacherDashboard() {
   return (
@@ -36,7 +29,7 @@ export default function TeacherDashboard() {
           position: "relative",
           display: {
             lg: "block",
-            md: "block",
+            md: "none",
             sm: "none",
             xs: "none",
           },
@@ -54,14 +47,15 @@ export default function TeacherDashboard() {
           postion: "relative",
           display: "flex",
           flexDirection: "column",
-          width: "90%",
+          width: {
+            lg: "90%",
+            md: "100%",
+            sm: "100%",
+            xs: "100%",
+          },
         }}
       >
-        <AppBar position="sticky">
-          <Toolbar>
-            <Typography>Quiz Bee</Typography>
-          </Toolbar>
-        </AppBar>
+        <TeacherNavBar />
         <Box sx={{ height: "100%" }}></Box>
         <Box
           sx={{

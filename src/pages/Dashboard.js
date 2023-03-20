@@ -32,7 +32,7 @@ import {
   collection,
 } from "firebase/firestore";
 
-export default function Dashboard() {
+export default function Dashboard({ user }) {
   const auth = getAuth();
   const db = getFirestore();
   const [payload, SetPayload] = useState({
@@ -65,6 +65,8 @@ export default function Dashboard() {
                   role: docs.data().userRole,
                   status: docs.data().Status,
                   nickname: docs.data().nickname,
+                  username: user.displayName,
+                  email: user.email,
                 });
               });
             });
@@ -81,7 +83,7 @@ export default function Dashboard() {
     };
     SetData();
   }, []);
-
+  console.log();
   return (
     <Box sx={{ height: "100vh" }}>
       {payload.status && payload.role === "Student" ? (
@@ -91,7 +93,7 @@ export default function Dashboard() {
         </Box>
       ) : payload.status && payload.role === "Teacher" ? (
         <TeacherDashboard />
-      ) : (
+      ) : !payload.role && !payload.status ? (
         <Box>
           <NavBar />
           <Box
@@ -530,6 +532,8 @@ export default function Dashboard() {
             </Typography>
           </Box>
         </Box>
+      ) : (
+        ""
       )}
 
       <BottomNav />

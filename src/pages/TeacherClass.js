@@ -3,18 +3,13 @@ import {
   Box,
   Paper,
   Typography,
-  AppBar,
-  Toolbar,
   TextField,
   InputAdornment,
   Button,
   IconButton,
   Menu,
-  MenuItem,
   Stack,
   Pagination,
-  ListItemIcon,
-  ListItemText,
 } from "@mui/material";
 
 import { useNavigate } from "react-router-dom";
@@ -26,6 +21,7 @@ import { ReactComponent as DeleteIcon } from "../assets/svg/delete.svg";
 import { ReactComponent as EditIcon } from "../assets/svg/edit-1.svg";
 
 import TeacherDashboardDrawer from "./components/TeacherDashboardDrawer";
+import TeacherNavBar from "./components/TeacherNavBar";
 
 import CreateClass from "./components/CreateClass";
 import EditClass from "./components/EditClass";
@@ -79,7 +75,7 @@ export default function TeacherClass() {
     SetPostperPage(parseInt(+e.target.value));
     SetPage(1);
   };
-  var class_arr = []
+  var class_arr = [];
   useEffect(() => {
     const SetData = () => {
       onAuthStateChanged(auth, (user) => {
@@ -90,7 +86,7 @@ export default function TeacherClass() {
             querySnapShot.forEach((docs) => {
               class_arr.push(docs.data());
               SetClasses(class_arr);
-              SetResult(class_arr)
+              SetResult(class_arr);
             });
           });
         }
@@ -146,6 +142,7 @@ export default function TeacherClass() {
   };
 
   const GetClass = (classId) => {
+    window.localStorage.setItem("code", classId);
     window.localStorage.setItem("url", "/teacherclasses/class=?" + classId);
   };
   return (
@@ -161,7 +158,7 @@ export default function TeacherClass() {
           position: "relative",
           display: {
             lg: "block",
-            md: "block",
+            md: "none",
             sm: "none",
             xs: "none",
           },
@@ -179,23 +176,35 @@ export default function TeacherClass() {
           postion: "relative",
           display: "flex",
           flexDirection: "column",
-          width: "90%",
+          width: {
+            lg: "90%",
+            md: "100%",
+            sm: "100%",
+            xs: "100%",
+          },
         }}
       >
-        <AppBar position="sticky">
-          <Toolbar>
-            <Typography>Quiz Bee</Typography>
-          </Toolbar>
-        </AppBar>
+        <TeacherNavBar />
         <Box
           sx={{
             height: "100%",
-            padding: "20px 40px",
+            padding: {
+              lg: "20px 40px",
+              md: "20px 40px",
+              sm: "20px 40px",
+              xs: "20px 20px",
+            },
             backgroundColor: (theme) => theme.palette.secondary.bg9,
           }}
         >
           <Typography
             sx={{
+              display: {
+                lg: "block",
+                md: "block",
+                sm: "block",
+                xs: "none",
+              },
               fontFamily: (theme) => theme.palette.typography.fontFamily,
               fontWeight: "600",
               fontSize: "24px",
@@ -205,7 +214,13 @@ export default function TeacherClass() {
           >
             My Classes
           </Typography>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: { lg: "row", md: "row", sm: "row", xs: "column" },
+              alignItems: "center",
+            }}
+          >
             <TextField
               onChange={handleChangeSearch("isSearch")}
               value={search.isSearch}
@@ -228,6 +243,12 @@ export default function TeacherClass() {
                 backgroundColor: (theme) => theme.palette.secondary.bg9,
                 borderRadius: "10px",
                 mb: "20px",
+                width: {
+                  lg: "200px",
+                  md: "200xp",
+                  sm: "200px",
+                  xs: "100%",
+                },
                 "& label.Mui-focused": {
                   borderColor: (theme) => theme.palette.secondary.main,
                   borderRadius: "10px",
@@ -263,6 +284,7 @@ export default function TeacherClass() {
               onClick={handleChangeModalOpen}
               sx={{
                 height: "40px",
+                width: { lg: "150px", md: "150px", sm: "150px", xs: "100%" },
                 backgroundColor: (theme) => theme.palette.secondary.main,
                 boxShadow: "0px 6px 0px #26399C",
                 borderRadius: "10px",
@@ -305,224 +327,235 @@ export default function TeacherClass() {
                 flexDirection: "column",
                 justifyContent: "space-evenly",
                 flexWrap: "wrap",
-                padding: "20px",
                 backgroundColor: (theme) => theme.palette.secondary.bg9,
               }}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-evenly",
-                  flexWrap: "wrap",
-                  padding: "20px",
-                  backgroundColor: (theme) => theme.palette.secondary.bg9,
-                }}
-              >
-                {classes
-                  .filter((index) =>
-                    search.isSearch !== ""
-                      ? index.Classname.includes(
-                          search.isSearch.toLocaleLowerCase()
-                        ) ||
-                        index.Classname.includes(
-                          search.isSearch.toLocaleUpperCase()
-                        ) ||
-                        index.Section.includes(
-                          search.isSearch.toLocaleLowerCase()
-                        ) ||
-                        index.Section.includes(
-                          search.isSearch.toLocaleUpperCase()
-                        )
-                      : index
-                  )
-                  .slice(indexofFirstPage, indexofLastPage)
-                  .map((row, index) => (
-                    <Paper
-                      key={index}
-                      onClick={() => {
-                        GetClass(row.classId);
-                        navigate("/teacherclasses/class=?" + row.classId);
-                      }}
-                      id="parent"
-                      sx={{
-                        position: "relative",
-                        display: "flex",
-                        height: "150px",
-                        width: "45%",
-                        borderRadius: "10px",
-                        mb: "20px",
-                      }}
-                    >
-                      <Box
-                        component="div"
-                        sx={{
-                          height: "100%",
-                          width: "6%",
-                          backgroundColor: row.Class_Color_Code,
-                          borderRadius: "10px 0px 0px 10px",
+              <Box sx={{ display: "flex" }}>
+                <Box
+                  sx={{
+                    height: "350px",
+                    display: "flex",
+                    justifyContent: "space-evenly",
+                    flexWrap: "wrap",
+                    padding: "20px",
+                    width: "100%",
+                    overflow: "auto",
+                    backgroundColor: (theme) => theme.palette.secondary.bg9,
+                  }}
+                >
+                  {classes
+                    .filter((index) =>
+                      search.isSearch !== ""
+                        ? index.Classname.includes(
+                            search.isSearch.toLocaleLowerCase()
+                          ) ||
+                          index.Classname.includes(
+                            search.isSearch.toLocaleUpperCase()
+                          ) ||
+                          index.Section.includes(
+                            search.isSearch.toLocaleLowerCase()
+                          ) ||
+                          index.Section.includes(
+                            search.isSearch.toLocaleUpperCase()
+                          )
+                        : index
+                    )
+                    .slice(indexofFirstPage, indexofLastPage)
+                    .map((row, index) => (
+                      <Paper
+                        key={index}
+                        onClick={() => {
+                          GetClass(row.classId);
+                          navigate("/teacherclasses/class=?" + row.classId);
                         }}
-                      />
-                      <Box
+                        id="parent"
                         sx={{
+                          position: "relative",
                           display: "flex",
-                          flexDirection: "column",
-                          height: "100%",
-                          width: "70%",
+                          height: "150px",
+                          width: {
+                            lg: "45%",
+                            md: "45%",
+                            sm: "45%",
+                            xs: "100%",
+                          },
+                          borderRadius: "10px",
+                          mb: "20px",
                         }}
                       >
-                        <Typography
-                          variant="h6"
+                        <Box
+                          component="div"
                           sx={{
-                            fontFamily: (theme) =>
-                              theme.palette.typography.fontFamily,
-                            fontWeight: "normal",
-                            color: row.Class_Color_Code,
-                            textTransform: "capitalize",
-                            margin: "20px 0px 0px 20px",
+                            height: "100%",
+                            width: "6%",
+                            backgroundColor: row.Class_Color_Code,
+                            borderRadius: "10px 0px 0px 10px",
                           }}
-                        >
-                          {row.Classname}
-                        </Typography>
-                        <Typography
-                          variant="body2"
+                        />
+                        <Box
                           sx={{
-                            fontFamily: (theme) =>
-                              theme.palette.typography.fontFamily,
-                            fontWeight: "normal",
-                            color: row.Class_Color_Code,
-                            textTransform: "capitalize",
-                            margin: "0px 0px 0px 20px",
+                            display: "flex",
+                            flexDirection: "column",
+                            height: "100%",
+                            width: "70%",
                           }}
                         >
-                          {row.Section}
-                        </Typography>
-                        <Box component="span" sx={{ flexGrow: "1" }} />
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            fontFamily: (theme) =>
-                              theme.palette.typography.fontFamily,
-                            fontWeight: "normal",
-                            color: row.Class_Color_Code,
-                            textTransform: "capitalize",
-                            margin: "0px 0px 10px 20px",
-                          }}
-                        >
-                          0 Students
-                        </Typography>
-                      </Box>
-                      <Box
-                        id="child_1"
-                        sx={{
-                          display: "flex",
-                          justifyContent: "flex-end",
-                          alignItems: "flex-start",
-                          height: "100%",
-                          width: "25%",
-                          borderRadius: "10px 0px 0px 10px",
-                        }}
-                      >
-                        <IconButton
-                          id="child_2"
-                          sx={{ mt: "10px", mr: "10px" }}
-                          onClick={(e) => (
-                            handleChangeClassModalOpen(e),
-                            GetclassId(row.classId)
-                          )}
-                        >
-                          <DotsIcon style={{ height: "20px", width: "20px" }} />
-                        </IconButton>
-                      </Box>
-                      {row.classId === classId ? (
-                        <Menu
-                          open={modal.isOpenEdit ? false : open}
-                          anchorEl={anchorEl}
-                          onClose={handleChangeClassModalClose}
-                          transformOrigin={{
-                            vertical: "top",
-                            horizontal: "right",
-                          }}
-                        >
-                          <Paper
+                          <Typography
+                            variant="h6"
                             sx={{
-                              width: "200px",
-                              boxShadow: "none",
+                              fontFamily: (theme) =>
+                                theme.palette.typography.fontFamily,
+                              fontWeight: "normal",
+                              color: row.Class_Color_Code,
+                              textTransform: "capitalize",
+                              margin: "20px 0px 0px 20px",
                             }}
                           >
-                            <Button
-                              onClick={(e) => {
-                                handleChangeEditModalOpen(e);
-                                GetClassData(row);
-                              }}
+                            {row.Classname}
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              fontFamily: (theme) =>
+                                theme.palette.typography.fontFamily,
+                              fontWeight: "normal",
+                              color: row.Class_Color_Code,
+                              textTransform: "capitalize",
+                              margin: "0px 0px 0px 20px",
+                            }}
+                          >
+                            {row.Section}
+                          </Typography>
+                          <Box component="span" sx={{ flexGrow: "1" }} />
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              fontFamily: (theme) =>
+                                theme.palette.typography.fontFamily,
+                              fontWeight: "normal",
+                              color: row.Class_Color_Code,
+                              textTransform: "capitalize",
+                              margin: "0px 0px 10px 20px",
+                            }}
+                          >
+                            0 Students
+                          </Typography>
+                        </Box>
+                        <Box
+                          id="child_1"
+                          sx={{
+                            display: "flex",
+                            justifyContent: "flex-end",
+                            alignItems: "flex-start",
+                            height: "100%",
+                            width: "25%",
+                            borderRadius: "10px 0px 0px 10px",
+                          }}
+                        >
+                          <IconButton
+                            id="child_2"
+                            sx={{ mt: "10px", mr: "10px" }}
+                            onClick={(e) => (
+                              handleChangeClassModalOpen(e),
+                              GetclassId(row.classId)
+                            )}
+                          >
+                            <DotsIcon
+                              style={{ height: "20px", width: "20px" }}
+                            />
+                          </IconButton>
+                        </Box>
+                        {row.classId === classId ? (
+                          <Menu
+                            open={modal.isOpenEdit ? false : open}
+                            anchorEl={anchorEl}
+                            onClose={handleChangeClassModalClose}
+                            transformOrigin={{
+                              vertical: "top",
+                              horizontal: "right",
+                            }}
+                          >
+                            <Paper
                               sx={{
-                                display: "flex",
-                                justifyContent: "flex-start",
-                                width: "100%",
+                                width: "200px",
+                                boxShadow: "none",
                               }}
-                              startIcon={
-                                <EditIcon
-                                  style={{
-                                    height: "20px",
-                                    width: "20px",
-                                    color: "#2499E3",
-                                    marginLeft: "10px",
-                                  }}
-                                />
-                              }
                             >
-                              <Typography
-                                sx={{
-                                  fontFamily: (theme) =>
-                                    theme.palette.typography.fontFamily,
-                                  fontWeight: "normal",
-                                  color: (theme) =>
-                                    theme.palette.textColor.col1,
-                                  textTransform: "capitalize",
+                              <Button
+                                onClick={(e) => {
+                                  handleChangeEditModalOpen(e);
+                                  GetClassData(row);
                                 }}
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "flex-start",
+                                  width: "100%",
+                                }}
+                                startIcon={
+                                  <EditIcon
+                                    style={{
+                                      height: "20px",
+                                      width: "20px",
+                                      color: "#2499E3",
+                                      marginLeft: "10px",
+                                    }}
+                                  />
+                                }
                               >
-                                Edit class details
-                              </Typography>
-                            </Button>
-                            <Button
-                              onClick={(e) => {
-                                handleChangeDeleteModalOpen(e);
-                              }}
-                              sx={{
-                                display: "flex",
-                                justifyContent: "flex-start",
-                                width: "100%",
-                              }}
-                              startIcon={
-                                <DeleteIcon
-                                  style={{
-                                    height: "20px",
-                                    width: "20px",
-                                    color: "#2499E3",
-                                    marginLeft: "10px",
+                                <Typography
+                                  sx={{
+                                    fontFamily: (theme) =>
+                                      theme.palette.typography.fontFamily,
+                                    fontWeight: "normal",
+                                    color: (theme) =>
+                                      theme.palette.textColor.col1,
+                                    textTransform: "capitalize",
                                   }}
-                                />
-                              }
-                            >
-                              <Typography
-                                sx={{
-                                  fontFamily: (theme) =>
-                                    theme.palette.typography.fontFamily,
-                                  fontWeight: "normal",
-                                  color: (theme) =>
-                                    theme.palette.textColor.col1,
-                                  textTransform: "capitalize",
+                                >
+                                  Edit class details
+                                </Typography>
+                              </Button>
+                              <Button
+                                onClick={(e) => {
+                                  handleChangeDeleteModalOpen(e);
                                 }}
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "flex-start",
+                                  width: "100%",
+                                }}
+                                startIcon={
+                                  <DeleteIcon
+                                    style={{
+                                      height: "20px",
+                                      width: "20px",
+                                      color: "#2499E3",
+                                      marginLeft: "10px",
+                                    }}
+                                  />
+                                }
                               >
-                                Delete Class
-                              </Typography>
-                            </Button>
-                          </Paper>
-                        </Menu>
-                      ) : (
-                        ""
-                      )}
-                    </Paper>
-                  ))}
+                                <Typography
+                                  sx={{
+                                    fontFamily: (theme) =>
+                                      theme.palette.typography.fontFamily,
+                                    fontWeight: "normal",
+                                    color: (theme) =>
+                                      theme.palette.textColor.col1,
+                                    textTransform: "capitalize",
+                                  }}
+                                >
+                                  Delete Class
+                                </Typography>
+                              </Button>
+                            </Paper>
+                          </Menu>
+                        ) : (
+                          ""
+                        )}
+                      </Paper>
+                    ))}
+                </Box>
               </Box>
               <Stack
                 spacing={2}

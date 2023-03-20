@@ -26,6 +26,8 @@ import UserRoleVer from "../pages/UserRoleVer";
 import StudentRoles from "../pages/components/userrole_ver/education/StudentRoles";
 import TeacherRoles from "../pages/components/userrole_ver/education/TeacherRoles";
 
+import JoinClass from "../pages/JoinClass";
+
 import MessageDialog from "../pages/components/MessageDialog";
 
 import "../utils/firebase";
@@ -48,7 +50,6 @@ export default function Routing() {
   const Theme = createTheme(theme(true));
   const auth = getAuth();
   const db = getFirestore();
-
   const redirected = localStorage;
   const [userData, SetUserData] = useState({
     role: "",
@@ -144,7 +145,7 @@ export default function Routing() {
 
   useEffect(() => {
     const getLink = () => {
-      SetLink(window.localStorage.getItem("url"));
+      SetLink(window.localStorage.getItem("code"));
     };
     getLink();
   }, [link]);
@@ -262,7 +263,8 @@ export default function Routing() {
               <Route path="*" element={<PageNotFound />} />
             )}
 
-            <Route path="*" element={<PageNotFound />} />
+            <Route path={`/classes/join_class=?`+ link} element={<JoinClass />} />
+            {userData ? "" : <Route path="*" element={<PageNotFound />} />}
           </Routes>
         </Router>
         <Box>

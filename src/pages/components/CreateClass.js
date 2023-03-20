@@ -61,6 +61,8 @@ export default function CreateClass({ Open, onClose }) {
 
   const [user, SetUser] = useState({
     username: "",
+    lastname: "",
+    proper_call: "",
   });
 
   const [dialog, SetDialog] = useState({
@@ -137,7 +139,9 @@ export default function CreateClass({ Open, onClose }) {
               if (docs.exists) {
                 SetUser({
                   ...user,
-                  username: docs.data().Firstname + " " + docs.data().Lastname,
+                  proper_call: docs.data().proper_call,
+                  username: docs.data().Firstname,
+                  lastname: docs.data().Lastname,
                 });
               }
             });
@@ -165,14 +169,15 @@ export default function CreateClass({ Open, onClose }) {
           alphabet[Math.floor(Math.random() * alphabet.length)] +
           Math.round(Math.random() * (max - min) + min);
         const userDoc = doc(db, "Classes", docId);
-
         setDoc(userDoc, {
           Classname: payload.classname.toLocaleUpperCase(),
           Subject: payload.subject.toLocaleUpperCase(),
           Section: payload.section.toLocaleUpperCase(),
           Class_Color_Code:
             payload.color_code === color ? payload.color_code : color,
-          Teacher: user.username,
+          TeacherFname: user.username,
+          TeacherLname: user.lastname,
+          Teacher_proper_call: user.proper_call,
           classId: docId,
           userUid: auth.currentUser.uid,
         });
@@ -190,7 +195,7 @@ export default function CreateClass({ Open, onClose }) {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        ml: "15%",
+        ml: { lg: "15%", md: "0px", sm: "0px", xs: "0px" },
       }}
     >
       <motion.div
@@ -204,7 +209,13 @@ export default function CreateClass({ Open, onClose }) {
           alignItems: "center",
         }}
       >
-        <Paper sx={{ width: "400px", padding: "20px", borderRadius: "15px" }}>
+        <Paper
+          sx={{
+            width: { lg: "400px", md: "400px", sm: "400px", xs: "300px" },
+            padding: "20px",
+            borderRadius: "15px",
+          }}
+        >
           <Typography
             variant="h6"
             sx={{
