@@ -83,6 +83,10 @@ export default function EditClass({
     SetColor(color_code);
   };
 
+  const handleChangeDialogClose = () => {
+    SetDialog({ ...dialog, isOpen: false });
+  };
+
   const handleChange = (prop) => (e) => {
     SetPayload({ ...payload, [prop]: e.target.value });
   };
@@ -114,7 +118,42 @@ export default function EditClass({
     };
     getData();
   }, [classId]);
-  const editClass = () => {};
+  const editClass = () => {
+    if (
+      payload.Classname === "" ||
+      payload.Subject === "" ||
+      payload.Section === ""
+    ) {
+      SetDialog({
+        ...dialog,
+        isOpen: true,
+        message: "Please enter a value",
+        icon: false,
+      });
+    } else {
+      try {
+        const userDoc = doc(db, "Classes", classId);
+        setDoc(
+          userDoc,
+          {
+            Classname: payload.Classname.toLocaleUpperCase(),
+            Subject: payload.Subject.toLocaleUpperCase(),
+            Section: payload.Section.toLocaleUpperCase(),
+            Class_Color_Code: color,
+          },
+          { merge: true }
+        )
+          .then(() => {
+            window.location.reload();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
   return (
     <Modal
       open={Open}
@@ -543,10 +582,16 @@ export default function EditClass({
                 textTransform: "capitalize",
               }}
             >
-              Create Class
+              Edit Class
             </Typography>
           </Button>
         </Paper>
+        <MessageDialog
+          Open={dialog.isOpen}
+          onClose={handleChangeDialogClose}
+          message={dialog.message}
+          icon={dialog.icon}
+        />
       </motion.div>
     </Modal>
   );

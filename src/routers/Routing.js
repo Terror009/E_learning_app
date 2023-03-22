@@ -21,6 +21,7 @@ import StudentDashboard from "../pages/DashboardRole/StudentDashboard";
 import TeacherClass from "../pages/TeacherClass";
 import TeacherReport from "../pages/TeacherReport";
 import ClassRoom from "../pages/ClassRoom";
+import TeacherSetting from "../pages/TeacherSetting";
 
 import UserRoleVer from "../pages/UserRoleVer";
 import StudentRoles from "../pages/components/userrole_ver/education/StudentRoles";
@@ -216,6 +217,15 @@ export default function Routing() {
                     <PrivateRouter Component={ClassRoom} isAuth={payload} />
                   }
                 />
+                <Route
+                  path="/teachersettings"
+                  element={
+                    <PrivateRouter
+                      Component={TeacherSetting}
+                      isAuth={payload}
+                    />
+                  }
+                />
               </React.Fragment>
             ) : (
               <React.Fragment>
@@ -263,7 +273,7 @@ export default function Routing() {
               <Route path="*" element={<PageNotFound />} />
             )}
 
-            <Route path={`/classes/join_class=?`+ link} element={<JoinClass />} />
+            <Route path="/classes/join_class=?" element={<JoinClass />} />
             {userData ? "" : <Route path="*" element={<PageNotFound />} />}
           </Routes>
         </Router>

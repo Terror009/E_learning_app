@@ -427,19 +427,7 @@ export default function TeacherClass() {
                             {row.Section}
                           </Typography>
                           <Box component="span" sx={{ flexGrow: "1" }} />
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              fontFamily: (theme) =>
-                                theme.palette.typography.fontFamily,
-                              fontWeight: "normal",
-                              color: row.Class_Color_Code,
-                              textTransform: "capitalize",
-                              margin: "0px 0px 10px 20px",
-                            }}
-                          >
-                            0 Students
-                          </Typography>
+
                         </Box>
                         <Box
                           id="child_1"

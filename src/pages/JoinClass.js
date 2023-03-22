@@ -18,7 +18,6 @@ export default function JoinClass() {
   const db = getFirestore();
   const location = useLocation();
   const class_code = window.localStorage.getItem("class_code");
-
   useEffect(() => {
     const getClass = () => {
       const userRef = collection(db, "Classes");

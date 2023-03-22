@@ -34,16 +34,20 @@ export default function ClassRoom({ open, onClose }) {
   const [classes, SetClass] = useState({});
 
   const [tabs, SetTabs] = useState(1);
-
+  const [student, SetStudent] = useState([0]);
   const [modal, SetModal] = useState({
     isOpen: false,
   });
 
   const tabs_data = [
     { tab_num: "0" },
-    { tab_num: "1", label: "Lesson", component: <Lesson /> },
-    { tab_num: "2", label: "Activity", component: <Activity /> },
-    { tab_num: "3", label: "Student", component: <Student /> },
+    { tab_num: "1", label: "Stream", component: <Lesson /> },
+    { tab_num: "2", label: "Class Work", component: <Activity /> },
+    {
+      tab_num: "3",
+      label: "Student",
+      component: <Student classId={class_code} />,
+    },
   ];
 
   const handleChangeTab = (e) => {
@@ -73,6 +77,22 @@ export default function ClassRoom({ open, onClose }) {
       });
     };
     getClassData();
+  }, []);
+  useEffect(() => {
+    const getAllStudent = () => {
+      var student_arr = [];
+      const userRef = collection(db, `Classes/${class_code}/Student`);
+      const q = query(userRef);
+      onSnapshot(q, (snapshot) => {
+        snapshot.forEach((docs) => {
+          if (docs.exists) {
+            student_arr.push(docs.data());
+            SetStudent(student_arr.length);
+          }
+        });
+      });
+    };
+    getAllStudent();
   }, []);
   return (
     <Box
@@ -184,7 +204,7 @@ export default function ClassRoom({ open, onClose }) {
                       color: (theme) => theme.palette.textColor.col2,
                     }}
                   >
-                    0 Student
+                    {student + " " + "Students"}
                   </Typography>
                 </Box>
                 <Box component="span" sx={{ flexGrow: "1" }} />
@@ -236,7 +256,7 @@ export default function ClassRoom({ open, onClose }) {
                 </Box>
               </Paper>
             </Box>
-            <Box>
+            <Box sx={{ display: "flex" }}>
               {tabs_data
                 .filter((index) => index.tab_num !== "0")
                 .map((row, index) => (

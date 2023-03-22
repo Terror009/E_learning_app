@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { Drawer, Box, Typography, Button, Link, Divider } from "@mui/material";
-import { Link as NLink, useLocation } from "react-router-dom";
+import { Link as NLink, useLocation, useNavigate } from "react-router-dom";
 
 import { ReactComponent as PlusIcon } from "../../assets/svg/plus.svg";
 import { ReactComponent as ClassIcon } from "../../assets/svg/students.svg";
@@ -11,7 +11,7 @@ import { ReactComponent as SettingIcon } from "../../assets/svg/setting.svg";
 import { ReactComponent as LogoutIcon } from "../../assets/svg/logout.svg";
 
 import "../../utils/firebase";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import {
   getFirestore,
   collection,
@@ -23,6 +23,7 @@ export default function TeacherDrawer({ open, onClose }) {
   const auth = getAuth();
   const db = getFirestore();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [payload, SetPayload] = useState({
     proper_call: "",
@@ -52,6 +53,18 @@ export default function TeacherDrawer({ open, onClose }) {
 
   const isClose = () => {
     onClose();
+  };
+  const LogOut = () => {
+    signOut(auth)
+      .then(() => {
+        window.localStorage.clear();
+        window.location.reload();
+        window.location.replace("/login");
+        console.log("were");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   return (
     <Drawer open={open} onClose={isClose} anchor={"left"}>
@@ -199,7 +212,7 @@ export default function TeacherDrawer({ open, onClose }) {
         </Box>
         <Box component="span" sx={{ flexGrow: ".5" }} />
         <Divider orientation="horizontal" />
-        <Link component={NLink} to="/setting" sx={{ textDecoration: "none" }}>
+        <Link component={NLink} to="/teachersettings" sx={{ textDecoration: "none" }}>
           <Button
             fullWidth
             sx={{
@@ -233,6 +246,7 @@ export default function TeacherDrawer({ open, onClose }) {
           </Button>
         </Link>
         <Button
+          onClick={LogOut}
           fullWidth
           sx={{
             display: "flex",

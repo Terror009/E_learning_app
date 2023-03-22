@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { Box, Typography, Button, Link, Divider } from "@mui/material";
-import { Link as NLink, useLocation } from "react-router-dom";
+import { Link as NLink, useLocation, useNavigate } from "react-router-dom";
 
 import { ReactComponent as PlusIcon } from "../../assets/svg/plus.svg";
 import { ReactComponent as ClassIcon } from "../../assets/svg/students.svg";
@@ -11,7 +11,7 @@ import { ReactComponent as SettingIcon } from "../../assets/svg/setting.svg";
 import { ReactComponent as LogoutIcon } from "../../assets/svg/logout.svg";
 
 import "../../utils/firebase";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import {
   getFirestore,
   collection,
@@ -23,7 +23,7 @@ export default function TeacherDashboardDrawer() {
   const auth = getAuth();
   const db = getFirestore();
   const location = useLocation();
-
+  const navigate = useNavigate();
   const [payload, SetPayload] = useState({
     proper_call: "",
     lname: "",
@@ -49,6 +49,19 @@ export default function TeacherDashboardDrawer() {
     };
     SetData();
   }, []);
+
+  const LogOut = () => {
+    signOut(auth)
+      .then(() => {
+        window.localStorage.clear();
+        window.location.reload();
+        window.location.replace("/login");
+        console.log("were");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <Box
       sx={{
@@ -205,7 +218,11 @@ export default function TeacherDashboardDrawer() {
       </Box>
       <Box component="span" sx={{ flexGrow: ".5" }} />
       <Divider orientation="horizontal" />
-      <Link component={NLink} to="/setting" sx={{ textDecoration: "none" }}>
+      <Link
+        component={NLink}
+        to="/teachersettings"
+        sx={{ textDecoration: "none" }}
+      >
         <Button
           fullWidth
           sx={{
@@ -239,6 +256,7 @@ export default function TeacherDashboardDrawer() {
         </Button>
       </Link>
       <Button
+        onClick={LogOut}
         fullWidth
         sx={{
           display: "flex",
@@ -254,6 +272,7 @@ export default function TeacherDashboardDrawer() {
               width: "20px",
               color: "#8A92A6",
               marginLeft: "10px",
+              pointerEvents: "none",
             }}
           />
         }
@@ -264,6 +283,7 @@ export default function TeacherDashboardDrawer() {
             fontWeight: "bold",
             color: (theme) => theme.palette.textColor.col4,
             textTransform: "capitalize",
+            pointerEvents: "none",
           }}
         >
           Log out
